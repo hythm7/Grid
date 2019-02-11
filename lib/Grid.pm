@@ -1,13 +1,22 @@
 use Grid::Util;
 
-unit role Grid[:$columns!];
-  also does Grid::Util;
+unit role Grid[:$columns];
+  #also does Grid::Util;
 
-has Int $!columns = $columns;
-has Int $!rows    = self.elems div $!columns;
+has Int $!elems;
+has Int $!columns;
+has Int $!rows;;
 
-method columns () { $!columns }
-method rows () { $!rows }
+submethod BUILD() {
+  $!elems   =   self.elems;
+  $!columns = $columns // $!elems;
+  
+  fail 'Columns should not be 0' unless $!columns > 0;
+  
+  $!rows    =   $!elems div $!columns;
+  
+  fail 'Wrong number of elemnts' unless $!elems == $!columns * $!rows;
+}
 
 multi method hflip (Grid:D:) {
 
@@ -102,12 +111,12 @@ multi method arotate (Grid:D: :@subgrid!) {
 
 # TODO: grid indentation;
 method grid () {
-  .put for self.rotor($!columns);
+  .fmt('%2d').put for self.rotor($!columns);
 }
 
-method !subgrid(:@subgrid! is copy) {
+submethod !subgrid(:@subgrid! is copy) {
   @subgrid .= sort.unique;
-	my $columns =  self!subgrid-columns(:@subgrid);
+	my $columns = (@subgrid Xmod $!columns).unique.elems;
 	return Array if @subgrid.elems mod $columns;
   # maybe [-] @subgrid eq $!columns?
 	return Array unless @subgrid.rotor($columns).rotor(2 => -1).map( ->@a {
@@ -119,8 +128,8 @@ method !subgrid(:@subgrid! is copy) {
 }
 
 method !subgrid-columns(:@subgrid --> Int) {
-	my $columns =  @subgrid.rotor(2 => -1, :partial).first( -> @a { (@a.head.succ != @a.tail) or (not @a.tail mod self.columns)  }):k + 1;
-  $columns = $!columns if self.elems == $columns;
+	my $columns =  @subgrid.rotor(2 => -1, :partial).first( -> @a { (@a.head.succ != @a.tail) or (not @a.tail mod $!columns)  }):k + 1;
+  $columns = $!columns if $!elems == $columns;
   
   $columns;
 }
