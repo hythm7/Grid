@@ -11,11 +11,17 @@ submethod BUILD() {
   $!elems   =   self.elems;
   $!columns = $columns // $!elems;
   
-  fail 'Columns should not be 0' unless $!columns > 0;
+  say 'c ', $columns, ' e ',$!elems;
+  fail 'columns' if $columns > $!elems;
+  fail 'columns' unless $!columns > 0;
   
   $!rows    =   $!elems div $!columns;
   
-  fail 'Wrong number of elemnts' unless $!elems == $!columns * $!rows;
+  fail 'elemnts' unless $!elems == $!columns * $!rows;
+}
+
+method columns () {
+  $!columns
 }
 
 multi method hflip (Grid:D:) {
@@ -111,28 +117,41 @@ multi method arotate (Grid:D: :@subgrid!) {
 
 # TODO: grid indentation;
 method grid () {
-  .fmt('%2d').put for self.rotor($!columns);
+  .put for self.rotor($!columns);
 }
 
 submethod !subgrid(:@subgrid! is copy) {
+  CATCH {
+    say 'WARN:subgrid:returning: Columns can not be 0.'     when 'columns';
+    say 'WARN:subgrid:returning: Wrong number of elements.' when 'elemnts';
+    return Array
+    };
+    
   @subgrid .= sort.unique;
+  
+  # verify contigous subgrid
 	my $columns = (@subgrid Xmod $!columns).unique.elems;
-	return Array if @subgrid.elems mod $columns;
+	#my $columns = (@subgrid Xmod $!columns).minmax.elems;
+  #return Array if $columns > @subgrid.elems;
+  
+  #return Array unless $columns == (@subgrid Xmod $!columns).minmax.elems;
+	#return Array if @subgrid.elems mod $columns;
+  
   # maybe [-] @subgrid eq $!columns?
-	return Array unless @subgrid.rotor($columns).rotor(2 => -1).map( ->@a {
-    (@a.head X+ $!columns) eq @a.tail;
-    }).all.so ;
+	#return Array unless @subgrid.rotor($columns).rotor(2 => -1).map( ->@a {
+  #  (@a.head X+ $!columns) eq @a.tail;
+  #  }).all.so ;
     
   @subgrid does Grid[:$columns];
   @subgrid;
 }
 
-method !subgrid-columns(:@subgrid --> Int) {
-	my $columns =  @subgrid.rotor(2 => -1, :partial).first( -> @a { (@a.head.succ != @a.tail) or (not @a.tail mod $!columns)  }):k + 1;
-  $columns = $!columns if $!elems == $columns;
+#method !subgrid-columns(:@subgrid --> Int) {
+#	my $columns =  @subgrid.rotor(2 => -1, :partial).first( -> @a { (@a.head.succ != @a.tail) or (not @a.tail mod $!columns)  }):k + 1;
+#  $columns = $!columns if $!elems == $columns;
   
-  $columns;
-}
+#  $columns;
+#}
 
 method is-square (--> Bool) {
   #return False if $!columns < 2;
