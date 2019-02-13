@@ -1,4 +1,3 @@
-use Grid::Util;
 
 unit role Grid[:$columns];
   #also does Grid::Util;
@@ -11,7 +10,6 @@ submethod BUILD() {
   $!elems   =   self.elems;
   $!columns = $columns // $!elems;
   
-  say 'c ', $columns, ' e ',$!elems;
   fail 'columns' if $columns > $!elems;
   fail 'columns' unless $!columns > 0;
   
@@ -130,9 +128,12 @@ submethod !subgrid(:@subgrid! is copy) {
   @subgrid .= sort.unique;
   
   # verify contigous subgrid
-	my $columns = (@subgrid Xmod $!columns).unique.elems;
-	#my $columns = (@subgrid Xmod $!columns).minmax.elems;
-  #return Array if $columns > @subgrid.elems;
+	#my $columns = (@subgrid Xmod $!columns).unique.elems;
+	my $columns = (@subgrid Xmod $!columns).minmax.elems;
+  say $columns;
+  say (@subgrid Xmod $!columns).rotor($columns, :partial);
+
+  return Array unless [eqv] (@subgrid Xmod $!columns).rotor($columns, :partial);
   
   #return Array unless $columns == (@subgrid Xmod $!columns).minmax.elems;
 	#return Array if @subgrid.elems mod $columns;
