@@ -4,22 +4,22 @@ unit role Grid[:$columns];
 
 has Int $!elems;
 has Int $!columns;
-has Int $!rows;;
+has Int $!rows;
 
 submethod BUILD() {
-  $!elems   =   self.elems;
+  $!elems   = self.elems;
   $!columns = $columns // $!elems;
+  $!rows    = $!elems div $!columns;
   
-  fail 'columns' if $columns > $!elems;
-  fail 'columns' unless $!columns > 0;
-  
-  $!rows    =   $!elems div $!columns;
-  
-  fail 'elemnts' unless $!elems == $!columns * $!rows;
+  fail 'subgrid' unless $!elems == $!columns * $!rows;
 }
 
 method columns () {
   $!columns
+}
+
+method rows () {
+  $!rows
 }
 
 multi method hflip (Grid:D:) {
@@ -120,48 +120,23 @@ method grid () {
 
 submethod !subgrid(:@subgrid! is copy) {
   CATCH {
-    say 'WARN:subgrid:returning: Columns can not be 0.'     when 'columns';
-    say 'WARN:subgrid:returning: Wrong number of elements.' when 'elemnts';
+    say "WARN:subgrid:returning: [{@subgrid}] not valid subgrid." when 'subgrid';
     return Array
     };
-    
+  
   @subgrid .= sort.unique;
   
-  # verify contigous subgrid
-	#my $columns = (@subgrid Xmod $!columns).unique.elems;
-	my $columns = (@subgrid Xmod $!columns).minmax.elems;
-  say $columns;
-  say (@subgrid Xmod $!columns).rotor($columns, :partial);
-
-  return Array unless [eqv] (@subgrid Xmod $!columns).rotor($columns, :partial);
+	my $columns = (@subgrid Xmod $!columns).unique.elems;
   
-  #return Array unless $columns == (@subgrid Xmod $!columns).minmax.elems;
-	#return Array if @subgrid.elems mod $columns;
-  
-  # maybe [-] @subgrid eq $!columns?
-	#return Array unless @subgrid.rotor($columns).rotor(2 => -1).map( ->@a {
-  #  (@a.head X+ $!columns) eq @a.tail;
-  #  }).all.so ;
-    
   @subgrid does Grid[:$columns];
   @subgrid;
 }
-
-#method !subgrid-columns(:@subgrid --> Int) {
-#	my $columns =  @subgrid.rotor(2 => -1, :partial).first( -> @a { (@a.head.succ != @a.tail) or (not @a.tail mod $!columns)  }):k + 1;
-#  $columns = $!columns if $!elems == $columns;
-  
-#  $columns;
-#}
 
 method is-square (--> Bool) {
   #return False if $!columns < 2;
   $!columns == $!rows;
 }
 
-sub get-subgrid-columns (:@subgrid) {
-
-}
 
 =begin pod
 
