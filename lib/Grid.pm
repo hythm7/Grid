@@ -128,6 +128,8 @@ submethod !subgrid(:@subgrid! is copy) {
   
 	my $columns = (@subgrid Xmod $!columns).unique.elems;
   
+  return Array unless [eqv] (@subgrid Xmod $!columns).rotor($columns, :partial);
+  
   @subgrid does Grid[:$columns];
   @subgrid;
 }
