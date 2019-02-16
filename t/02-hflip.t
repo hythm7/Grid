@@ -12,6 +12,7 @@ my @tests = (
 # [Grid Subgrid Result]
 [ @array, [0, 4],                 @array ], # @subgrid not valid
 [ @array, [3, 4],                 @array ], # @subgrid not valid
+[ @array, [1, 7],                 @array ], # @subgrid not valid
 [ @array, [0 ... 0],              @array ], # @subgrid not valid
 [ @array, [0 ... 4],              @array ], # @subgrid not valid
 [ @array, [0 ... 4, 7],           @array ], # @subgrid not valid
