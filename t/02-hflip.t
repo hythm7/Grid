@@ -30,7 +30,7 @@ my @tests = (
 );
 
 for @tests -> [ @grid, @subgrid, @result ] {
-  ok @result eq @grid.hflip(:@subgrid), "hflip: {@subgrid}";
+  ok @result eq @grid.horizontal-flip(:@subgrid), "horizontal-flip {@subgrid}";
 }
 
 done-testing;

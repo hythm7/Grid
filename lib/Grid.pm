@@ -12,15 +12,114 @@ submethod BUILD( ) {
 
 }
 
-method append-column ( Grid:D: @column --> Grid:D ) {
+method append-column ( Grid:D: :@column! --> Grid:D ) {
+	return self unless @column.elems == $!rows;
   
+  my @grid = flat self.rotor($!columns) Z @column;
+
+  @grid does Grid[ :columns($!columns + 1) ];
+  @grid;
 }
 
-method append-row ( Grid:D: @row --> Grid:D ) {
+method prepend-column ( Grid:D: :@column! --> Grid:D ) {
+	return self unless @column.elems == $!rows;
   
+  my @grid = flat @column Z self.rotor($!columns);
+
+  @grid does Grid[ :columns($!columns + 1) ];
+  @grid;
 }
 
-multi method hflip ( Grid:D: --> Grid:D ) {
+method pop-columns ( Grid:D:  Int :$columns = 1 --> Grid:D ) {
+
+	my @grid = flat [Z] ([Z] self.rotor($!columns)).head($!columns - $columns);
+
+  
+  @grid does Grid[ :columns($!columns - $columns) ];
+  @grid;
+}
+
+method shift-columns ( Grid:D:  Int :$columns = 1 --> Grid:D ) {
+
+	my @grid = flat [Z] ([Z] self.rotor($!columns)).tail($!columns - $columns);
+  
+  @grid does Grid[ :columns($!columns - $columns) ];
+  @grid;
+}
+
+method rotate-columns-left ( Grid:D:  Int :$columns = 1 --> Grid:D ) {
+
+  my @grid = flat [Z] ([Z] self.rotor($!columns)).list.rotate($columns);
+  
+  @grid does Grid[:$!columns];
+  @grid;
+}
+
+method rotate-columns-right ( Grid:D:  Int :$columns = 1 --> Grid:D ) {
+
+  my @grid = flat [Z] ([Z] self.rotor($!columns)).list.rotate(- $columns);
+  
+  @grid does Grid[:$!columns];
+  @grid;
+}
+
+
+method append-row ( Grid:D: :@row --> Grid:D ) {
+
+	return self unless @row.elems == $!columns;
+
+  my @grid = self.append(@row);
+  
+  @grid does Grid[:$!columns];
+  @grid;
+}
+
+method prepend-row ( Grid:D: :@row --> Grid:D ) {
+
+	return self unless @row.elems == $!columns;
+
+  my @grid = self.prepend(@row);
+  
+  @grid does Grid[:$!columns];
+  @grid;
+}
+
+method pop-rows ( Grid:D:  Int :$rows = 1 --> Grid:D ) {
+
+  my @grid = flat self.rotor($!columns).head($!rows - $rows);
+
+  
+  @grid does Grid[:$!columns];
+  @grid;
+}
+
+method shift-rows ( Grid:D:  Int :$rows = 1 --> Grid:D ) {
+
+  my @grid = flat self.rotor($!columns).tail($!rows - $rows);
+  
+  @grid does Grid[:$!columns];
+  @grid;
+}
+
+method rotate-rows-up ( Grid:D:  Int :$rows = 1 --> Grid:D ) {
+
+  my @grid = flat self.rotor($!columns).list.rotate($rows);
+  
+  @grid does Grid[:$!columns];
+  @grid;
+}
+
+method rotate-rows-down ( Grid:D:  Int :$rows = 1 --> Grid:D ) {
+
+  my @grid = flat self.rotor($!columns).list.rotate(- $rows);
+  
+  @grid does Grid[:$!columns];
+  @grid;
+}
+
+
+
+multi method horizontal-flip ( Grid:D: --> Grid:D ) {
 
   my @grid = self.rotor($!columns).map(*.reverse).flat;
   
@@ -28,30 +127,30 @@ multi method hflip ( Grid:D: --> Grid:D ) {
   @grid;
 }
 
-multi method hflip ( Grid:D: :@subgrid! --> Grid:D ) {
+multi method horizontal-flip ( Grid:D: :@subgrid! --> Grid:D ) {
   
   my @indices := self!subgrid(:@subgrid);
   
   my @grid = self;
-  @grid[@indices] = @grid[@indices.hflip];
+  @grid[@indices] = @grid[@indices.horizontal-flip];
   
   @grid does Grid[:$!columns];
   @grid;
 }
 
-multi method vflip ( Grid:D: --> Grid:D ) {
+multi method vertical-flip ( Grid:D: --> Grid:D ) {
   my @grid = self.rotor($!columns).reverse.flat;
   
   @grid does Grid[:$!columns];
   @grid;
 }
 
-multi method vflip ( Grid:D: :@subgrid! --> Grid:D ) {
+multi method vertical-flip ( Grid:D: :@subgrid! --> Grid:D ) {
   
   my @indices := self!subgrid(:@subgrid);
   
   my @grid = self;
-  @grid[@indices] = @grid[@indices.vflip];
+  @grid[@indices] = @grid[@indices.vertical-flip];
   
   @grid does Grid[:$!columns];
   @grid;
@@ -86,24 +185,24 @@ multi method transpose ( Grid:D: :@subgrid! --> Grid:D ) {
 }
 
 
-multi method crotate ( Grid:D: --> Grid:D ) {
-  self.transpose.hflip;
+multi method clockwise-rotate ( Grid:D: --> Grid:D ) {
+  self.transpose.horizontal-flip;
 }
 
-multi method crotate ( Grid:D: :@subgrid! ) {
+multi method clockwise-rotate ( Grid:D: :@subgrid! ) {
   my @indices := self!subgrid(:@subgrid);
   return self unless @indices.is-square;
-  self.transpose(subgrid => @indices).hflip(subgrid => @indices);
+  self.transpose(subgrid => @indices).horizontal-flip(subgrid => @indices);
 }
 
-multi method arotate ( Grid:D: --> Grid:D ) {
-  self.transpose.vflip;
+multi method anticlockwise-rotate ( Grid:D: --> Grid:D ) {
+  self.transpose.vertical-flip;
 }
 
-multi method arotate ( Grid:D: :@subgrid! --> Grid:D ) {
+multi method anticlockwise-rotate ( Grid:D: :@subgrid! --> Grid:D ) {
   my @indices := self!subgrid(:@subgrid);
   return self unless @indices.is-square;
-  self.transpose(subgrid => @indices).vflip(subgrid => @indices);
+  self.transpose(subgrid => @indices).vertical-flip(subgrid => @indices);
 }
 
 method grid () {
