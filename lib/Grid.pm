@@ -158,14 +158,8 @@ multi method vertical-flip ( Grid:D: :@subgrid! --> Grid:D ) {
 
 
 multi method transpose ( Grid:D: --> Grid:D ) {
-  my @transposed;
-  my @rotored = self.rotor($!columns);
 
-  for ^$!rows X ^$!columns -> ($r, $c) {
-    @transposed[$c][$r] = @rotored[$r][$c];
-  }
-
-   my @grid = gather @transposed.deepmap: *.take;
+   my @grid = flat [Z] self.rotor($!columns);
    
    @grid does Grid[columns => $!rows];
 	 @grid;
@@ -182,6 +176,31 @@ multi method transpose ( Grid:D: :@subgrid! --> Grid:D ) {
   
   @grid does Grid[:$!columns];
 	@grid;
+}
+
+multi method diagonal-flip ( Grid:D: --> Grid:D ) {
+
+	multi diagonal-index (Int :$index!) {
+		samewith self.end - $index * $!columns;
+	}
+
+	multi diagonal-index (Int $newindex) {
+		return $newindex unless $newindex < 0;
+		samewith $newindex + self.end;
+
+	}
+
+
+	self = self[diagonal-index(:index($_)) for self.keys];
+}
+
+multi method antidiagonal-flip ( Grid:D: --> Grid:D ) {
+
+	sub antidiagonal-index (Int $index) {
+		$index * $!columns mod self.end;
+	}
+
+	self = self[antidiagonal-index($_) for self.keys];
 }
 
 
@@ -252,6 +271,5 @@ submethod !check-subgrid (:@subgrid!, :$columns --> True) {
   }).all.so ;
   
 }
-
 
 
