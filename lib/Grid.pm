@@ -180,28 +180,47 @@ multi method transpose ( Grid:D: :@subgrid! --> Grid:D ) {
 
 multi method diagonal-flip ( Grid:D: --> Grid:D ) {
 
-	multi diagonal-index (Int :$index!) {
-		samewith self.end - $index * $!columns;
-	}
+  my @grid = self[ diagonal self.keys ];
+  @grid does Grid[:$!columns];
+   
+	@grid;
+}
 
-	multi diagonal-index (Int $newindex) {
-		return $newindex unless $newindex < 0;
-		samewith $newindex + self.end;
-
-	}
-
-
-	self = self[diagonal-index(:index($_)) for self.keys];
+multi method diagonal-flip ( Grid:D: :@subgrid! --> Grid:D ) {
+  
+  my @indices := self!subgrid(:@subgrid);
+  
+  return self unless @indices.is-square;
+  
+  my @grid = self;
+  @grid[@indices] = @grid[@indices.diagonal-flip];
+  
+  @grid does Grid[:$!columns];
+	@grid;
 }
 
 multi method antidiagonal-flip ( Grid:D: --> Grid:D ) {
 
-	sub antidiagonal-index (Int $index) {
-		$index * $!columns mod self.end;
-	}
-
-	self = self[antidiagonal-index($_) for self.keys];
+  my @grid = self[ antidiagonal self.keys ];
+  @grid does Grid[:$!columns];
+   
+	@grid;
 }
+
+multi method antidiagonal-flip ( Grid:D: :@subgrid! --> Grid:D ) {
+  
+  my @indices := self!subgrid(:@subgrid);
+  
+  return self unless @indices.is-square;
+  
+  my @grid = self;
+  @grid[@indices] = @grid[@indices.antidiagonal-flip];
+  
+  @grid does Grid[:$!columns];
+	@grid;
+}
+
+
 
 
 multi method clockwise-rotate ( Grid:D: --> Grid:D ) {
@@ -273,3 +292,44 @@ submethod !check-subgrid (:@subgrid!, :$columns --> True) {
 }
 
 
+sub diagonal ( @perfect --> Array ) {
+	#TODO: check if not perfect square
+
+	my $root = @perfect.sqrt.Int;
+
+	sub diagonaled-index ( Int $index ) { 
+  	return $index when $index == @perfect.end;
+		return $index * $root mod @perfect.end;
+  }
+
+	my @diagonaled = @perfect[ @perfect.keys.map: *.&diagonaled-index ];
+
+	@diagonaled;
+
+}
+
+
+
+sub antidiagonal ( @perfect --> Array) {
+	my $root = @perfect.sqrt.Int;
+
+	multi antidiagonal-index ( Int $index ) {
+	  my $newindex = @perfect.end - $index * $root;
+
+	  return $newindex unless $newindex < 0;
+	  samewith $newindex;
+	}
+
+	multi antidiagonal-index (Int $index where * < 0) {
+		my $newindex = $index + @perfect.end;
+	  return $newindex unless $newindex < 0;
+	  samewith $newindex;
+	}
+
+
+	my @antidiagonaled = @perfect[ @perfect.keys.map: *.&antidiagonal-index ];
+	
+	@antidiagonaled;
+
+
+}
