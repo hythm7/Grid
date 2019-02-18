@@ -25,12 +25,12 @@ my @tests = (
 [ @array, [0 ... 2],              < c b a d e f g h i j k l m n o p q r s t u v w x > ],
 [ @array, [0 ... 3],              < d c b a e f g h i j k l m n o p q r s t u v w x > ],
 [ @array, [0 ... 7],              < d c b a h g f e i j k l m n o p q r s t u v w x > ],
-[ @array, [9 ... 10, 13 ... 14],  < a b c d e f g h i k j l m o n p q r s t u v w x > ],
 [ @array, [0 ... 23],             < d c b a h g f e l k j i p o n m t s r q x w v u > ],
+[ @array, [9, 10, 13, 14],        < a b c d e f g h i k j l m o n p q r s t u v w x > ],
 );
 
-for @tests -> [ @grid, @subgrid, @result ] {
-  ok @result eq @grid.horizontal-flip(:@subgrid), "horizontal-flip {@subgrid}";
+for @tests -> [ @grid, @indices, @result ] {
+  ok @result eq @grid.horizontal-flip(:@indices), "horizontal-flip {@indices}";
 }
 
 done-testing;
