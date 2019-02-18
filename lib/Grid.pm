@@ -18,44 +18,44 @@ submethod BUILD( ) {
 
 method append-column ( Grid:D: :@column! --> Grid:D ) {
 
-	return self unless @column.elems == $!rows;
+  return self unless @column.elems == $!rows;
   
   self = flat self.rotor($!columns) Z @column;
 
-	$!columns += 1;
+  $!columns += 1;
 
-	self;
+  self;
 
 }
 
 method prepend-column ( Grid:D: :@column! --> Grid:D ) {
 
-	return self unless @column.elems == $!rows;
+  return self unless @column.elems == $!rows;
   
   self = flat @column Z self.rotor($!columns);
 
-	$!columns += 1;
+  $!columns += 1;
 
-	self;
+  self;
 }
 
 method pop-columns ( Grid:D:  Int :$columns = 1 --> Grid:D ) {
 
-	self = flat [Z] ([Z] self.rotor($!columns)).head($!columns - $columns);
+  self = flat [Z] ([Z] self.rotor($!columns)).head($!columns - $columns);
 
-	$!columns -= $columns;
+  $!columns -= $columns;
 
-	self;
+  self;
   
 }
 
 method shift-columns ( Grid:D:  Int :$columns = 1 --> Grid:D ) {
 
-	self = flat [Z] ([Z] self.rotor($!columns)).tail($!columns - $columns);
+  self = flat [Z] ([Z] self.rotor($!columns)).tail($!columns - $columns);
   
-	$!columns -= $columns;
+  $!columns -= $columns;
 
-	self;
+  self;
 
 }
 
@@ -74,34 +74,34 @@ method rotate-columns-right ( Grid:D:  Int :$times = 1 --> Grid:D ) {
 
 method append-row ( Grid:D: :@row --> Grid:D ) {
 
-	return self unless @row.elems == $!columns;
+  return self unless @row.elems == $!columns;
 
   self = self.append(@row);
 
-	$!rows += 1;
+  $!rows += 1;
 
-	self;
+  self;
   
 }
 
 method prepend-row ( Grid:D: :@row --> Grid:D ) {
 
-	return self unless @row.elems == $!columns;
+  return self unless @row.elems == $!columns;
 
   self = self.prepend(@row);
   
-	$!rows += 1;
+  $!rows += 1;
 
-	self;
+  self;
 }
 
 method pop-rows ( Grid:D:  Int :$rows = 1 --> Grid:D ) {
 
   self = flat self.rotor($!columns).head($!rows - $rows);
 
-	$!rows -= $rows;
+  $!rows -= $rows;
 
-	self;
+  self;
 
 }
 
@@ -109,9 +109,9 @@ method shift-rows ( Grid:D:  Int :$rows = 1 --> Grid:D ) {
 
   self = flat self.rotor($!columns).tail($!rows - $rows);
   
-	$!rows -= $rows;
+  $!rows -= $rows;
 
-	self;
+  self;
 
 }
 
@@ -131,7 +131,7 @@ method rotate-rows-down ( Grid:D:  Int :$times = 1 --> Grid:D ) {
 
 multi method horizontal-flip ( Grid:D: --> Grid:D ) {
 
-	self = self.rotor($!columns).map(*.reverse).flat;
+  self = self.rotor($!columns).map(*.reverse).flat;
 
 }
 
@@ -141,7 +141,7 @@ multi method horizontal-flip ( Grid:D: :@indices! --> Grid:D ) {
 
   self[@indices] = self[@subgrid.horizontal-flip];
 
-	self;
+  self;
   
 }
 
@@ -157,7 +157,7 @@ multi method vertical-flip ( Grid:D: :@indices! --> Grid:D ) {
 
   self[@indices] = self[@subgrid.vertical-flip];
 
-	self;
+  self;
 
 }
 
@@ -168,18 +168,18 @@ multi method transpose ( Grid:D: --> Grid:D ) {
 
    ($!columns, $!rows) .= reverse; 
 
-	 self;
+   self;
 }
 
 multi method transpose ( Grid:D: :@indices! --> Grid:D ) {
   
   my @subgrid := self!subgrid(:@indices);
 
-	return self unless @subgrid.is-square;
+  return self unless @subgrid.is-square;
 
   self[@indices] = self[@subgrid.transpose];
 
-	self;
+  self;
 }
 
 multi method diagonal-flip ( Grid:D: --> Grid:D ) {
@@ -194,7 +194,7 @@ multi method diagonal-flip ( Grid:D: :@indices! --> Grid:D ) {
 
   self[@indices] = self[@subgrid.diagonal-flip];
 
-	self;
+  self;
 }
 
 multi method antidiagonal-flip ( Grid:D: --> Grid:D ) {
@@ -209,23 +209,23 @@ multi method antidiagonal-flip ( Grid:D: :@indices! --> Grid:D ) {
 
   self[@indices] = self[@subgrid.antidiagonal-flip];
 
-	self;
+  self;
 }
 
 multi method clockwise-rotate ( Grid:D: --> Grid:D ) {
   
-	self.transpose.horizontal-flip;
+  self.transpose.horizontal-flip;
 }
 
 multi method clockwise-rotate ( Grid:D: :@indices! ) {
 
   my @subgrid := self!subgrid(:@indices);
 
-	return self unless @subgrid.is-square;
+  return self unless @subgrid.is-square;
 
   self[@indices] = self[@subgrid.clockwise-rotate];
 
-	self;
+  self;
 
 }
 
@@ -238,11 +238,11 @@ multi method anticlockwise-rotate ( Grid:D: :@indices! --> Grid:D ) {
 
 my @subgrid := self!subgrid(:@indices);
 
-	return self unless @subgrid.is-square;
+  return self unless @subgrid.is-square;
 
   self[@indices] = self[@subgrid.anticlockwise-rotate];
 
-	self;
+  self;
 
 }
 
@@ -260,15 +260,15 @@ submethod !subgrid( :@indices! --> Grid:D ) {
     say "warn::subgrid:: {@subgrid.VAR.name} is not subgrid." when 'rows';
     say "warn::subgrid:: {@subgrid.VAR.name} is not subgrid." when 'grid';
 
-		@subgrid does Grid;
+    @subgrid does Grid;
 
-		@subgrid;
+    @subgrid;
 
   }
   
   @indices .= sort.unique;
   
-	#my $columns = (@subgrid Xmod $!columns).unique.elems;
+  #my $columns = (@subgrid Xmod $!columns).unique.elems;
   my $columns =  @indices.rotor(2 => -1, :partial).first( -> @a {
     (@a.head.succ != @a.tail) or (not @a.tail mod $!columns)
   }):k + 1;
@@ -277,7 +277,7 @@ submethod !subgrid( :@indices! --> Grid:D ) {
   
   self!check-subgrid(:@indices, :$columns);
   
-	my @subgrid = @indices;
+  my @subgrid = @indices;
   @subgrid does Grid[:$columns];
   @subgrid;
 }
