@@ -1,9 +1,8 @@
+use Grid::Exceptions;
 use Grid::Util;
-use Grid::ErrorHandling;
 
 unit role Grid[:$columns];
-  also does Grid::ErrorHandling;
-
+  
 has Int $!columns where * > 0;
 has Int $!rows;
 
@@ -11,8 +10,7 @@ submethod BUILD( ) {
   
   $!columns = $columns // (self.elems ?? self.elems !! 1);
   $!rows    = self.elems div $!columns;
-
-  fail "grid" unless self!is-grid;
+  self!check-grid;
 
 }
 
@@ -138,11 +136,12 @@ multi method horizontal-flip ( Grid:D: --> Grid:D ) {
 multi method horizontal-flip ( Grid:D: :@indices! --> Grid:D ) {
   
   my @subgrid := self!subgrid(:@indices);
-
+  
   self[@indices] = self[@subgrid.horizontal-flip];
 
-  self;
+  return self;
   
+ 
 }
 
 multi method vertical-flip ( Grid:D: --> Grid:D ) {
@@ -255,18 +254,7 @@ method grid () {
 
 
 submethod !subgrid( :@indices! --> Grid:D ) {
-  CATCH {
-    my @subgrid;
-    say "warn::subgrid:: {@subgrid.VAR.name} is not subgrid." when 'rows';
-    say "warn::subgrid:: {@subgrid.VAR.name} is not subgrid." when 'grid';
-
-    @subgrid does Grid;
-
-    @subgrid;
-
-  }
-  
-  @indices .= sort.unique;
+    @indices .= sort.unique;
   
   #my $columns = (@subgrid Xmod $!columns).unique.elems;
   my $columns =  @indices.rotor(2 => -1, :partial).first( -> @a {
@@ -279,11 +267,25 @@ submethod !subgrid( :@indices! --> Grid:D ) {
   
   my @subgrid = @indices;
   @subgrid does Grid[:$columns];
-  @subgrid;
+  return @subgrid;
+  
+  CATCH {
+    when X::Grid::Subgrid::Cells {
+      note .message;
+      @indices = Empty;
+      .resume;
+    }
+    when X::Grid::Grid::Elements {
+      note .message;
+      @indices = Empty;
+      .resume;
+    }
+  }
 }
 
-submethod !is-grid ( Grid:D: --> Bool:D ) {
-  self.elems == $!columns * $!rows;
+submethod !check-grid ( Grid:D: --> Nil ) {
+  fail X::Grid::Grid::Elements.new(who => self.VAR.name) unless
+    self.elems == $!columns * $!rows;
 }
 
 submethod is-square ( --> Bool:D ) {
@@ -292,10 +294,10 @@ submethod is-square ( --> Bool:D ) {
 }
 
 submethod !check-subgrid (:@indices!, :$columns --> True) {
-  # fail  unless [eqv] (@subgrid Xmod $!columns).rotor(@subgrid.columns, :partial);
-  fail 'rows' unless @indices.rotor($columns).rotor(2 => -1).map( ->@a {
+# fail  unless [eqv] (@subgrid Xmod $!columns).rotor(@subgrid.columns, :partial);
+  fail X::Grid::Subgrid::Cells.new(who => @indices, grid => self.VAR.name) unless
+    @indices.rotor($columns).rotor(2 => -1).map( -> @a {
       (@a.head X+ $!columns) eq @a.tail;
-  }).all.so ;
-  
+    }).all.so ;
 }
 
