@@ -40,4 +40,3 @@ sub antidiagonal ( @perfect --> Array) is export {
   @antidiagonaled;
 
 }
-

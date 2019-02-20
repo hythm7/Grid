@@ -1,22 +1,28 @@
-use Grid::Exceptions;
 use Grid::Util;
 
 unit role Grid[:$columns];
   
-has Int $!columns where * > 0;
+has Int $!columns; # where * > 0;
 has Int $!rows;
 
-submethod BUILD( ) {
+submethod BUILD( ) is hidden-from-backtrace {
   
-  $!columns = $columns // (self.elems ?? self.elems !! 1);
+  $!columns = $columns // self.elems;
+
+  fail "Can't have grid of {self.elems} elements with {$!columns} columns"
+    unless self.elems %% $!columns;
+}
+
+
+submethod TWEAK () {
+
   $!rows    = self.elems div $!columns;
-  self!check-grid;
 
 }
 
 method append-column ( Grid:D: :@column! --> Grid:D ) {
 
-  return self unless @column.elems == $!rows;
+  return self unless self.check-column( :@column );
   
   self = flat self.rotor($!columns) Z @column;
 
@@ -28,7 +34,7 @@ method append-column ( Grid:D: :@column! --> Grid:D ) {
 
 method prepend-column ( Grid:D: :@column! --> Grid:D ) {
 
-  return self unless @column.elems == $!rows;
+  return self unless self.check-column( :@column );
   
   self = flat @column Z self.rotor($!columns);
 
@@ -72,7 +78,7 @@ method rotate-columns-right ( Grid:D:  Int :$times = 1 --> Grid:D ) {
 
 method append-row ( Grid:D: :@row --> Grid:D ) {
 
-  return self unless @row.elems == $!columns;
+  return self unless self.check-row( :@row );
 
   self = self.append(@row);
 
@@ -84,7 +90,7 @@ method append-row ( Grid:D: :@row --> Grid:D ) {
 
 method prepend-row ( Grid:D: :@row --> Grid:D ) {
 
-  return self unless @row.elems == $!columns;
+  return self unless self.check-row( :@row );
 
   self = self.prepend(@row);
   
@@ -135,7 +141,10 @@ multi method horizontal-flip ( Grid:D: --> Grid:D ) {
 
 multi method horizontal-flip ( Grid:D: :@indices! --> Grid:D ) {
   
-  my @subgrid := self!subgrid(:@indices);
+  my @subgrid := self!subgrid( :@indices );
+
+  return self unless @subgrid;
+
   
   self[@indices] = self[@subgrid.horizontal-flip];
 
@@ -152,7 +161,9 @@ multi method vertical-flip ( Grid:D: --> Grid:D ) {
 
 multi method vertical-flip ( Grid:D: :@indices! --> Grid:D ) {
   
-  my @subgrid := self!subgrid(:@indices);
+  my @subgrid := self!subgrid( :@indices );
+
+  return self unless @subgrid;
 
   self[@indices] = self[@subgrid.vertical-flip];
 
@@ -172,9 +183,9 @@ multi method transpose ( Grid:D: --> Grid:D ) {
 
 multi method transpose ( Grid:D: :@indices! --> Grid:D ) {
   
-  my @subgrid := self!subgrid(:@indices);
+  my @subgrid := self!subgrid( :@indices, :square );
 
-  return self unless @subgrid.is-square;
+  return self unless @subgrid;
 
   self[@indices] = self[@subgrid.transpose];
 
@@ -183,13 +194,17 @@ multi method transpose ( Grid:D: :@indices! --> Grid:D ) {
 
 multi method diagonal-flip ( Grid:D: --> Grid:D ) {
 
+  return self unless self.is-square;
+
   self = self[ diagonal self.keys ];
 
 }
 
 multi method diagonal-flip ( Grid:D: :@indices! --> Grid:D ) {
   
-  my @subgrid := self!subgrid(:@indices);
+  my @subgrid := self!subgrid( :@indices, :square );
+
+  return self unless @subgrid;
 
   self[@indices] = self[@subgrid.diagonal-flip];
 
@@ -198,13 +213,17 @@ multi method diagonal-flip ( Grid:D: :@indices! --> Grid:D ) {
 
 multi method antidiagonal-flip ( Grid:D: --> Grid:D ) {
 
+  return self unless self.is-square;
+
   self = self[ antidiagonal self.keys ];
 
 }
 
 multi method antidiagonal-flip ( Grid:D: :@indices! --> Grid:D ) {
   
-  my @subgrid := self!subgrid(:@indices);
+  my @subgrid := self!subgrid( :@indices, :square );
+
+  return self unless @subgrid;
 
   self[@indices] = self[@subgrid.antidiagonal-flip];
 
@@ -218,9 +237,9 @@ multi method clockwise-rotate ( Grid:D: --> Grid:D ) {
 
 multi method clockwise-rotate ( Grid:D: :@indices! ) {
 
-  my @subgrid := self!subgrid(:@indices);
+  my @subgrid := self!subgrid( :@indices, :square );
 
-  return self unless @subgrid.is-square;
+  return self unless @subgrid;
 
   self[@indices] = self[@subgrid.clockwise-rotate];
 
@@ -235,9 +254,9 @@ multi method anticlockwise-rotate ( Grid:D: --> Grid:D ) {
 
 multi method anticlockwise-rotate ( Grid:D: :@indices! --> Grid:D ) {
 
-my @subgrid := self!subgrid(:@indices);
+my @subgrid := self!subgrid( :@indices, :square );
 
-  return self unless @subgrid.is-square;
+  return self unless @subgrid;
 
   self[@indices] = self[@subgrid.anticlockwise-rotate];
 
@@ -253,7 +272,7 @@ method grid () {
 
 
 
-submethod !subgrid( :@indices! --> Grid:D ) {
+submethod !subgrid( :@indices!, :$square = False ) {
     @indices .= sort.unique;
   
   #my $columns = (@subgrid Xmod $!columns).unique.elems;
@@ -261,31 +280,24 @@ submethod !subgrid( :@indices! --> Grid:D ) {
     (@a.head.succ != @a.tail) or (not @a.tail mod $!columns)
   }):k + 1;
   
-  
-  
-  self!check-subgrid(:@indices, :$columns);
+# fail  unless [eqv] (@subgrid Xmod $!columns).rotor(@subgrid.columns, :partial);
+  die "[{@indices}] is not subgrid of {self.VAR.name}"
+    unless @indices.rotor($columns).rotor(2 => -1).map( -> @a {
+    (@a.head X+ $!columns) eq @a.tail;
+  }).all.so ;
+
   
   my @subgrid = @indices;
   @subgrid does Grid[:$columns];
-  return @subgrid;
-  
-  CATCH {
-    when X::Grid::Subgrid::Cells {
-      note .message;
-      @indices = Empty;
-      .resume;
-    }
-    when X::Grid::Grid::Elements {
-      note .message;
-      @indices = Empty;
-      .resume;
-    }
-  }
-}
 
-submethod !check-grid ( Grid:D: --> Nil ) {
-  fail X::Grid::Grid::Elements.new(who => self.VAR.name) unless
-    self.elems == $!columns * $!rows;
+  $square and die "[{@indices}] is not square subgrid of {self.VAR.name}" unless @subgrid.is-square;
+
+  return @subgrid;
+
+  CATCH {
+    note .message;
+    return Array;
+  }
 }
 
 submethod is-square ( --> Bool:D ) {
@@ -293,11 +305,14 @@ submethod is-square ( --> Bool:D ) {
   $!columns == $!rows;
 }
 
-submethod !check-subgrid (:@indices!, :$columns --> True) {
-# fail  unless [eqv] (@subgrid Xmod $!columns).rotor(@subgrid.columns, :partial);
-  fail X::Grid::Subgrid::Cells.new(who => @indices, grid => self.VAR.name) unless
-    @indices.rotor($columns).rotor(2 => -1).map( -> @a {
-      (@a.head X+ $!columns) eq @a.tail;
-    }).all.so ;
+submethod check-column ( :@column --> Bool:D ) {
+  return True if @column.elems == $!rows;
+  note "Column check failed, must have {$!rows} elements.";
+  False;
 }
 
+submethod check-row ( :@row --> Bool:D ) {
+  return True if @row.elems == $!columns;
+  note "Row check failed, must have {$!columns} elements.";
+  False;
+}
