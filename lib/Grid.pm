@@ -2,22 +2,19 @@ use Grid::Util;
 
 unit role Grid[:$columns];
   
-has Int $!columns; # where * > 0;
+has Int $!columns;
 has Int $!rows;
 
 submethod BUILD( ) is hidden-from-backtrace {
-  
+  #say $columns;
   $!columns = $columns // self.elems;
-
-  fail "Can't have grid of {self.elems} elements with {$!columns} columns"
-    unless self.elems %% $!columns;
-}
-
-
-submethod TWEAK () {
-
+  
+  die "Can't have grid of {$!columns} columns" unless $!columns;
+  
   $!rows    = self.elems div $!columns;
-
+  
+  die "Can't have grid of {self.elems} elements with {$!columns} columns"
+    unless self.elems == $!columns * $!rows;
 }
 
 method append-column ( Grid:D: :@column! --> Grid:D ) {
@@ -273,20 +270,32 @@ method grid () {
 
 
 submethod !subgrid( :@indices!, :$square = False ) {
-    @indices .= sort.unique;
+  @indices .= sort.unique;
+    
+
+  die "[{@indices}] is not subgrid of {self.VAR.name}"
+    if @indices.tail > self.end;
   
   #my $columns = (@subgrid Xmod $!columns).unique.elems;
   my $columns =  @indices.rotor(2 => -1, :partial).first( -> @a {
     (@a.head.succ != @a.tail) or (not @a.tail mod $!columns)
   }):k + 1;
-  
+
+#Verify rows
 # fail  unless [eqv] (@subgrid Xmod $!columns).rotor(@subgrid.columns, :partial);
   die "[{@indices}] is not subgrid of {self.VAR.name}"
     unless @indices.rotor($columns).rotor(2 => -1).map( -> @a {
-    (@a.head X+ $!columns) eq @a.tail;
-  }).all.so ;
+      (@a.head X+ $!columns) eq @a.tail;
+    }).all.so ;
 
-  
+# if $columns == 1 {
+ #verify columns
+#   die "[{@indices}] is not subgrid of {self.VAR.name}"
+#    unless @indices.rotor($columns).rotor(2 => -1).map( -> @a {
+#      ( @a.tail.head - @a.head.tail ) < $!columns;
+#    }).all.so ;
+#}
+ 
   my @subgrid = @indices;
   @subgrid does Grid[:$columns];
 
@@ -298,6 +307,16 @@ submethod !subgrid( :@indices!, :$square = False ) {
     note .message;
     return Array;
   }
+}
+
+submethod has-subgrid( :@indices!, :$square = False --> Bool:D ) {
+
+  my @subgrid := self!subgrid( :@indices, :$square );
+  
+  return True if @subgrid ~~ Grid;
+
+  False;
+
 }
 
 submethod is-square ( --> Bool:D ) {
