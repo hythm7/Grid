@@ -9,7 +9,7 @@ my @grid = < a b c d e f g h i j k l m n o p >;
 @grid does Grid[:4columns];
 
 
-#plan 16;
+plan 42;
 
 
 # Subgrid test
@@ -45,34 +45,36 @@ for @subgrid-test -> [ @indices, $result ] {
 # Grid test
 my @indices = 5, 6, 9, 10;
 my @grid-test = (
-# [Method Subgrid Result]
-[ <vertical-flip>,   [0, 4],     < e b c d a f g h i j k l m n o p > ],
-[ <vertical-flip>,   [0 ... 1],  < a b c d e f g h i j k l m n o p > ],
-[ <vertical-flip>,   [0 ... 3],  < a b c d e f g h i j k l m n o p > ],
-[ <vertical-flip>,   [0 ... 7],  < e f g h a b c d i j k l m n o p > ],
-[ <vertical-flip>,   [0 ... 15], < m n o p i j k l e f g h a b c d > ],
-[ <vertical-flip>,   @indices,   < a b c d e j k h i f g l m n o p > ],
-
-[ <horizontal-flip>, [0, 4],     < a b c d e f g h i j k l m n o p > ],
-[ <horizontal-flip>, [0 ... 2],  < c b a d e f g h i j k l m n o p > ],
-[ <horizontal-flip>, [0 ... 3],  < d c b a e f g h i j k l m n o p > ],
-[ <horizontal-flip>, [0 ... 7],  < d c b a h g f e i j k l m n o p > ],
-[ <horizontal-flip>, [0 ... 15], < d c b a h g f e l k j i p o n m > ],
-[ <horizontal-flip>, [0 ... 1],  < b a c d e f g h i j k l m n o p > ],
-[ <horizontal-flip>, @indices,   < a b c d e g f h i k j l m n o p > ],
-[ <diagonal-flip>, @indices,   < a b c d e f j h i g k l m n o p > ],
-[ <antidiagonal-flip>, @indices,   < a b c d e k g h i j f l m n o p > ],
-
-[ <transpose>, @indices,   < a b c d e f j h i g k l m n o p > ],
-[ <clockwise-rotate>, @indices,   < a b c d e j f h i k g l m n o p > ],
-[ <anticlockwise-rotate>, @indices,   < a b c d e g k h i f j l m n o p > ],
+# [Method Pair.key Pair.value Result]
+[ <flip>,   <vertical>,      [0, 4],        < e b c d a f g h i j k l m n o p > ],
+[ <flip>,   <vertical>,      [0 ... 1],     < a b c d e f g h i j k l m n o p > ],
+[ <flip>,   <vertical>,      [0 ... 3],     < a b c d e f g h i j k l m n o p > ],
+[ <flip>,   <vertical>,      [0 ... 7],     < e f g h a b c d i j k l m n o p > ],
+[ <flip>,   <vertical>,      [0 ... 15],    < m n o p i j k l e f g h a b c d > ],
+[ <flip>,   <vertical>,      [5, 6, 9, 10], < a b c d e j k h i f g l m n o p > ],
+[ <flip>,   <horizontal>,    [0, 4],        < a b c d e f g h i j k l m n o p > ],
+[ <flip>,   <horizontal>,    [0 ... 2],     < c b a d e f g h i j k l m n o p > ],
+[ <flip>,   <horizontal>,    [0 ... 3],     < d c b a e f g h i j k l m n o p > ],
+[ <flip>,   <horizontal>,    [0 ... 7],     < d c b a h g f e i j k l m n o p > ],
+[ <flip>,   <horizontal>,    [0 ... 15],    < d c b a h g f e l k j i p o n m > ],
+[ <flip>,   <horizontal>,    [0 ... 1],     < b a c d e f g h i j k l m n o p > ],
+[ <flip>,   <horizontal>,    [5, 6, 9, 10], < a b c d e g f h i k j l m n o p > ],
+[ <flip>,   <diagonal>,      [5, 6, 9, 10], < a b c d e f j h i g k l m n o p > ],
+[ <flip>,   <antidiagonal>,  [5, 6, 9, 10], < a b c d e k g h i j f l m n o p > ],
+[ <rotate>, <clockwise>,     [5, 6, 9, 10], < a b c d e j f h i k g l m n o p > ],
+[ <rotate>, <anticlockwise>, [5, 6, 9, 10], < a b c d e g k h i f j l m n o p > ],
 );
 
-for @grid-test -> [ $method, @indices, @expected ] {
+for @grid-test -> [ $method, $pkey, $pvalue , @expected ] {
   my @grid = < a b c d e f g h i j k l m n o p >;
   @grid does Grid[:4columns];
-  my @result = @grid."$method"(:@indices);
-  is @result, @expected, $method;
+  @grid.grid;
+  my $argument = Pair.new($pkey, $pvalue);
+  my @result = @grid."$method"(|$argument);
+  say '';
+  @grid.grid;
+  say '';
+  is @result, @expected, "$method $argument" ;
 }
 
 # Other tests
@@ -80,10 +82,10 @@ my @column = 0, 1, 2, 3;
 my @row = 0, 1, 2, 3;
 
 
-is @grid.append-column(:@column), < a b c d 0 e f g h 1 i j k l 2 m n o p 3 >, 'append-column';
-is @grid.pop-columns(),           < a b c d e f g h i j k l m n o p >,         'pop-column';
-is @grid.append-row(:@row),       < a b c d e f g h i j k l m n o p 0 1 2 3 >, 'append-row';
-is @grid.pop-rows(),              < a b c d e f g h i j k l m n o p >,         'pop-row';
+is @grid.append(:@column), < a b c d 0 e f g h 1 i j k l 2 m n o p 3 >, 'append-column';
+is @grid.pop(:columns),    < a b c d e f g h i j k l m n o p >,         'pop-column';
+is @grid.append(:@row),    < a b c d e f g h i j k l m n o p 0 1 2 3 >, 'append-row';
+is @grid.pop(:rows),       < a b c d e f g h i j k l m n o p >,         'pop-row';
 
 
 done-testing;

@@ -11,17 +11,18 @@ my @array = <a b c d e f g h i j k l m n o p >;
 @array does Grid[:4columns];
 
 my @indices = 5, 6, 9, 10;
+my @horizontal = 5, 6, 9, 10;
+my @vertical = 5, 6, 9, 10;
+my @diagonal = 5, 6, 9, 10;
 
 my @column = < 0 1 2 3 >;
 my @row = < 0 1 2 3 >;
-
-#my $times = 2;
+my @rows = < 0 1 2 3 >;
 
 @array.grid;
 
-#@array.antidiagonal-flip;
-say @array.append-row(:@row);
-#@array.vertical-flip(:@indices);
+my @clockwise = 1, 2, 5, 6;
+say @array.flip(:@diagonal);
 
-say '';
+say @array;
 @array.grid;
