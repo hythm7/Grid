@@ -155,10 +155,11 @@ Returns `True` if `Grid` is a square, `False` otherwise.
 
 
 Examples
---------
+========
 
 ### grid
 
+<pre>
 <code>
 
     @grid.grid;
@@ -171,10 +172,12 @@ Examples
     u v w x
 
 </code>
+</pre>
 
 
 ### flip
 
+<pre>
 <code>
 
     a b c d                          **d c b a** 
@@ -218,10 +221,12 @@ Examples
     u v w x                          u v w x
 
 </code>
+</pre>
 
 
 ### rotate
 
+<pre>
 <code>
 
     a b c d                          **d a b c** 
@@ -273,9 +278,11 @@ Examples
 
 
 </code>
+</pre>
 
 ### transpose
 
+<pre>
 <code>
 
     a b c d
@@ -304,9 +311,11 @@ Examples
 
 
 </code>
+</pre>
 
 ### append
 
+<pre>
 <code>
 
     a b c d                          a b c d
@@ -326,9 +335,11 @@ Examples
   
 
 </code>
+</pre>
 
 ### prepend
 
+<pre>
 <code>
 
     a b c d                          **0 1 2 3**
@@ -347,10 +358,12 @@ Examples
     u v w x                          **5**u v w x
 
 </code>
+</pre>
 
 
 ### pop
 
+<pre>
 <code>
 
     a b c d
@@ -370,9 +383,11 @@ Examples
 
 
 </code>
+</pre>
 
 ### shift
 
+<pre>
 <code>
 
     a b c d
@@ -391,6 +406,7 @@ Examples
     u v w x                          x
 
 </code>
+</pre>
 
 
 AUTHOR
