@@ -180,20 +180,20 @@ Examples
 <pre>
 <code>
 
-    a b c d                          **d c b a** 
-    e f g h                          **h g f e**
-    i j k l       :horizontal        **l k j i**
-    m n o p    ----------------->    **p o n m**
-    q r s t                          **t s r q**
-    u v w x                          **x w v u**
+    a b c d                          <b>d c b a</b> 
+    e f g h                          <b>h g f e</b>
+    i j k l       :horizontal        <b>l k j i</b>
+    m n o p    ----------------->    <b>p o n m</b>
+    q r s t                          <b>t s r q</b>
+    u v w x                          <b>x w v u</b>
 
 
-    a b c d                          **u v w x**
-    e f g h                          **q r s t**
-    i j k l        :vertical         **m n o p**
-    m n o p    ----------------->    **i j k l**
-    q r s t                          **e f g h**
-    u v w x                          **a b c d**
+    a b c d                          <b>u v w x</b>
+    e f g h                          <b>q r s t</b>
+    i j k l        :vertical         <b>m n o p</b>
+    m n o p    ----------------->    <b>i j k l</b>
+    q r s t                          <b>e f g h</b>
+    u v w x                          <b>a b c d</b>
 
 
     a b c d                          a b c d
@@ -206,18 +206,18 @@ Examples
 
 
     a b c d                          a b c d
-    e f g h                          **e i m q**
-    i j k l       :@diagonal         **f j n r**
-    m n o p    ----------------->    **g k o s**
-    q r s t        4 ... 19          **h l p t**
+    e f g h                          <b>e i m q</b>
+    i j k l       :@diagonal         <b>f j n r</b>
+    m n o p    ----------------->    <b>g k o s</b>
+    q r s t        4 ... 19          <b>h l p t</b>
     u v w x                          u v w x
 
 
     a b c d                          a b c d
-    e f g h                          **t p l h**
-    i j k l     :@antidiagonal       **s o k g**
-    m n o p    ----------------->    **r n j f**
-    q r s t      [ 4 ... 19 ]        **q m i e**
+    e f g h                          <b>t p l h</b>
+    i j k l     :@antidiagonal       <b>s o k g</b>
+    m n o p    ----------------->    <b>r n j f</b>
+    q r s t      [ 4 ... 19 ]        <b>q m i e</b>
     u v w x                          u v w x
 
 </code>
@@ -229,50 +229,50 @@ Examples
 <pre>
 <code>
 
-    a b c d                          **d a b c** 
-    e f g h                          **h e f g**
-    i j k l         :right           **l i j k**
-    m n o p    ----------------->    **p m n o**
-    q r s t                          **t q r s**
-    u v w x                          **x u v w**
+    a b c d                          <b>d a b c</b> 
+    e f g h                          <b>h e f g</b>
+    i j k l         :right           <b>l i j k</b>
+    m n o p    ----------------->    <b>p m n o</b>
+    q r s t                          <b>t q r s</b>
+    u v w x                          <b>x u v w</b>
 
 
-    a b c d                          **c d a b** 
-    e f g h                          **g h e f**
-    i j k l         :2left           **k l i j**
-    m n o p    ----------------->    **o p m n**
-    q r s t                          **s t q r**
-    u v w x                          **w x u v**
+    a b c d                          <b>c d a b</b> 
+    e f g h                          <b>g h e f</b>
+    i j k l         :2left           <b>k l i j</b>
+    m n o p    ----------------->    <b>o p m n</b>
+    q r s t                          <b>s t q r</b>
+    u v w x                          <b>w x u v</b>
 
 
-    a b c d                          **m n o p** 
-    e f g h                          **q r s t**
-    i j k l         :3down           **u v w x**
-    m n o p    ----------------->    **a b c d**
-    q r s t                          **e f g h**
-    u v w x                          **i j k l**
+    a b c d                          <b>m n o p</b> 
+    e f g h                          <b>q r s t</b>
+    i j k l         :3down           <b>u v w x</b>
+    m n o p    ----------------->    <b>a b c d</b>
+    q r s t                          <b>e f g h</b>
+    u v w x                          <b>i j k l</b>
 
 
-    a b c d                          **e f g h** 
-    e f g h                          **i j k l**
-    i j k l          :7up            **m n o p**
-    m n o p    ----------------->    **q r s t**
-    q r s t                          **u v w x**
-    u v w x                          **a b c d**
+    a b c d                          <b>e f g h</b> 
+    e f g h                          <b>i j k l</b>
+    i j k l          :7up            <b>m n o p</b>
+    m n o p    ----------------->    <b>q r s t</b>
+    q r s t                          <b>u v w x</b>
+    u v w x                          <b>a b c d</b>
 
 
     a b c d
-    e f g h                          **u q m i e a**
-    i j k l       :clockwise         **v r n j f b**
-    m n o p    ----------------->    **w s o k g c**
-    q r s t                          **x t p l h d**
+    e f g h                          <b>u q m i e a</b>
+    i j k l       :clockwise         <b>v r n j f b</b>
+    m n o p    ----------------->    <b>w s o k g c</b>
+    q r s t                          <b>x t p l h d</b>
     u v w x
 
 
     a b c d                          a b c d
     e f g h                          e f g h
-    i j k l     :@anticlockwise      i **k o** l
-    m n o p    ----------------->    m **j n** p
+    i j k l     :@anticlockwise      i <b>k o</b> l
+    m n o p    ----------------->    m <b>j n</b> p
     q r s t    [ 9, 10, 13, 14 ]     q r s t
     u v w x                          u v w x
 
@@ -286,17 +286,17 @@ Examples
 <code>
 
     a b c d
-    e f g h                          **a e i m q u**
-    i j k l                          **b f j n r v**
-    m n o p    ----------------->    **c g k o s w**
-    q r s t                          **d h l p t x**
+    e f g h                          <b>a e i m q u</b>
+    i j k l                          <b>b f j n r v</b>
+    m n o p    ----------------->    <b>c g k o s w</b>
+    q r s t                          <b>d h l p t x</b>
     u v w x
 
 
     a b c d                          a b c d
     e f g h                          e f g h
-    i j k l        :@indices         i **j n** l
-    m n o p    ----------------->    m **k o** p
+    i j k l        :@indices         i <b>j n</b> l
+    m n o p    ----------------->    m <b>k o</b> p
     q r s t    [ 9, 10, 13, 14 ]     q r s t
     u v w x                          u v w x
 
@@ -324,14 +324,14 @@ Examples
     m n o p    ----------------->    m n o p
     q r s t    [ 0, 1, 2, 3 ]        q r s t
     u v w x                          u v w x
-                                   **0 1 2 3**
+                                   <b>0 1 2 3</b>
 
-    a b c d                          a b c d **0**
-    e f g h                          e f g h **1**
-    i j k l       :@column           i j k l **2**
-    m n o p    ----------------->    m n o p **3**
-    q r s t   [ 0, 1, 2, 3, 4, 5 ]   q r s t **4**
-    u v w x                          u v w x **5**
+    a b c d                          a b c d <b>0</b>
+    e f g h                          e f g h <b>1</b>
+    i j k l       :@column           i j k l <b>2</b>
+    m n o p    ----------------->    m n o p <b>3</b>
+    q r s t   [ 0, 1, 2, 3, 4, 5 ]   q r s t <b>4</b>
+    u v w x                          u v w x <b>5</b>
   
 
 </code>
@@ -342,7 +342,7 @@ Examples
 <pre>
 <code>
 
-    a b c d                          **0 1 2 3**
+    a b c d                          <b>0 1 2 3</b>
     e f g h                          a b c d
     i j k l         :@row            e f g h
     m n o p    ----------------->    i j k l
@@ -350,12 +350,12 @@ Examples
     u v w x                          q r s t
                                      u v w x
 
-    a b c d                          **0**a b c d
-    e f g h                          **1**e f g h
-    i j k l       :@column           **2**i j k l
-    m n o p    ----------------->    **3**m n o p
-    q r s t   [ 0, 1, 2, 3, 4, 5 ]   **4**q r s t
-    u v w x                          **5**u v w x
+    a b c d                          <b>0</b>a b c d
+    e f g h                          <b>1</b>e f g h
+    i j k l       :@column           <b>2</b>i j k l
+    m n o p    ----------------->    <b>3</b>m n o p
+    q r s t   [ 0, 1, 2, 3, 4, 5 ]   <b>4</b>q r s t
+    u v w x                          <b>5</b>u v w x
 
 </code>
 </pre>
