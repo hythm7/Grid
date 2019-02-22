@@ -1,4 +1,3 @@
-use Terminal::ANSIColor;
 use Grid::Util;
 
 unit role Grid[:$columns];
@@ -297,7 +296,7 @@ method grid () {
 }
 
 
-submethod has-subgrid( :@indices!, :$square = False --> Bool:D ) {
+method has-subgrid( :@indices!, :$square = False --> Bool:D ) {
 
   my @subgrid := self!subgrid( @indices, :$square );
   
@@ -307,7 +306,7 @@ submethod has-subgrid( :@indices!, :$square = False --> Bool:D ) {
 
 }
 
-submethod is-square ( --> Bool:D ) {
+method is-square ( --> Bool:D ) {
 
   #return False if $!columns < 2;
 

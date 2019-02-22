@@ -5,7 +5,7 @@ use Grid;
 
 
 
-my @grid = < a b c d e f g h i j k l m n o p >;
+my @grid = < a b c d e f g h i j k l m n o p q r s t u v w x >;
 @grid does Grid[:4columns];
 
 
@@ -19,18 +19,17 @@ my @subgrid-test = (
 [ [1, 7],                 False ], # @subgrid not valid
 [ [0 ... 4],              False ], # @subgrid not valid
 [ [0 ... 4, 7],           False ], # @subgrid not valid
-[ [0, 4, 8, 12, 16],      False ], # @subgrid not valid
-[ [0, 4, 8, 12, 16, 20],  False ], # @subgrid not valid
-[ [1, 5, 9, 13, 17, 21],  False ], # @subgrid not valid
-[ [3, 7, 11, 15, 19, 23], False ], # @subgrid not valid
-
+[ [0, 4, 8, 12, 16],      True  ], # @subgrid not valid
+[ [0, 4, 8, 12, 16, 20],  True ],
+[ [1, 5, 9, 13, 17, 21],  True ],
+[ [3, 7, 11, 15, 19, 23], True ],
 [ [0, 4],                 True ],
 [ [0 ... 0],              True ],
 [ [0 ... 1],              True ],
 [ [0 ... 2],              True ],
 [ [0 ... 3],              True ],
 [ [0 ... 7],              True ],
-[ [0 ... 15],             True ],
+[ [0 ... 23],             True ],
 [ [9, 10, 13, 14],        True ],
 );
 
@@ -38,7 +37,7 @@ my @subgrid-test = (
 
 for @subgrid-test -> [ @indices, $result ] {
   my $is-subgrid = @grid.has-subgrid(:@indices);
-  ok $result === $is-subgrid, "subgrid";
+  ok $result === $is-subgrid, "subgrid" ~ " [{@indices}]";
 }
 
 
@@ -46,46 +45,42 @@ for @subgrid-test -> [ @indices, $result ] {
 my @indices = 5, 6, 9, 10;
 my @grid-test = (
 # [Method Pair.key Pair.value Result]
-[ <flip>,   <vertical>,      [0, 4],        < e b c d a f g h i j k l m n o p > ],
-[ <flip>,   <vertical>,      [0 ... 1],     < a b c d e f g h i j k l m n o p > ],
-[ <flip>,   <vertical>,      [0 ... 3],     < a b c d e f g h i j k l m n o p > ],
-[ <flip>,   <vertical>,      [0 ... 7],     < e f g h a b c d i j k l m n o p > ],
-[ <flip>,   <vertical>,      [0 ... 15],    < m n o p i j k l e f g h a b c d > ],
-[ <flip>,   <vertical>,      [5, 6, 9, 10], < a b c d e j k h i f g l m n o p > ],
-[ <flip>,   <horizontal>,    [0, 4],        < a b c d e f g h i j k l m n o p > ],
-[ <flip>,   <horizontal>,    [0 ... 2],     < c b a d e f g h i j k l m n o p > ],
-[ <flip>,   <horizontal>,    [0 ... 3],     < d c b a e f g h i j k l m n o p > ],
-[ <flip>,   <horizontal>,    [0 ... 7],     < d c b a h g f e i j k l m n o p > ],
-[ <flip>,   <horizontal>,    [0 ... 15],    < d c b a h g f e l k j i p o n m > ],
-[ <flip>,   <horizontal>,    [0 ... 1],     < b a c d e f g h i j k l m n o p > ],
-[ <flip>,   <horizontal>,    [5, 6, 9, 10], < a b c d e g f h i k j l m n o p > ],
-[ <flip>,   <diagonal>,      [5, 6, 9, 10], < a b c d e f j h i g k l m n o p > ],
-[ <flip>,   <antidiagonal>,  [5, 6, 9, 10], < a b c d e k g h i j f l m n o p > ],
-[ <rotate>, <clockwise>,     [5, 6, 9, 10], < a b c d e j f h i k g l m n o p > ],
-[ <rotate>, <anticlockwise>, [5, 6, 9, 10], < a b c d e g k h i f j l m n o p > ],
+[ <flip>,   <vertical>,      [0, 4],          < e b c d a f g h i j k l m n o p q r s t u v w x > ],
+[ <flip>,   <vertical>,      [0 ... 1],       < a b c d e f g h i j k l m n o p q r s t u v w x > ],
+[ <flip>,   <vertical>,      [0 ... 3],       < a b c d e f g h i j k l m n o p q r s t u v w x > ],
+[ <flip>,   <vertical>,      [0 ... 7],       < e f g h a b c d i j k l m n o p q r s t u v w x > ],
+[ <flip>,   <vertical>,      [0 ... 23],      < u v w x q r s t m n o p i j k l e f g h a b c d > ],
+[ <flip>,   <vertical>,      [9, 10, 13, 14], < a b c d e f g h i n o l m j k p q r s t u v w x > ],
+[ <flip>,   <horizontal>,    [0, 4],          < a b c d e f g h i j k l m n o p q r s t u v w x > ],
+[ <flip>,   <horizontal>,    [0 ... 2],       < c b a d e f g h i j k l m n o p q r s t u v w x > ],
+[ <flip>,   <horizontal>,    [0 ... 3],       < d c b a e f g h i j k l m n o p q r s t u v w x > ],
+[ <flip>,   <horizontal>,    [0 ... 7],       < d c b a h g f e i j k l m n o p q r s t u v w x > ],
+[ <flip>,   <horizontal>,    [0 ... 23],      < d c b a h g f e l k j i p o n m t s r q x w v u > ],
+[ <flip>,   <horizontal>,    [0 ... 1],       < b a c d e f g h i j k l m n o p q r s t u v w x > ],
+[ <flip>,   <horizontal>,    [9, 10, 13, 14], < a b c d e f g h i k j l m o n p q r s t u v w x > ],
+[ <flip>,   <diagonal>,      [9, 10, 13, 14], < a b c d e f g h i j n l m k o p q r s t u v w x > ],
+[ <flip>,   <antidiagonal>,  [9, 10, 13, 14], < a b c d e f g h i o k l m n j p q r s t u v w x > ],
+[ <rotate>, <clockwise>,     [9, 10, 13, 14], < a b c d e f g h i n j l m o k p q r s t u v w x > ],
+[ <rotate>, <anticlockwise>, [9, 10, 13, 14], < a b c d e f g h i k o l m j n p q r s t u v w x > ],
 );
 
 for @grid-test -> [ $method, $pkey, $pvalue , @expected ] {
-  my @grid = < a b c d e f g h i j k l m n o p >;
+  my @grid = < a b c d e f g h i j k l m n o p q r s t u v w x >;
   @grid does Grid[:4columns];
-  @grid.grid;
   my $argument = Pair.new($pkey, $pvalue);
   my @result = @grid."$method"(|$argument);
-  say '';
-  @grid.grid;
-  say '';
   is @result, @expected, "$method $argument" ;
 }
 
 # Other tests
-my @column = 0, 1, 2, 3;
+my @column = 0, 1, 2, 3, 4, 5;
 my @row = 0, 1, 2, 3;
 
 
-is @grid.append(:@column), < a b c d 0 e f g h 1 i j k l 2 m n o p 3 >, 'append-column';
-is @grid.pop(:columns),    < a b c d e f g h i j k l m n o p >,         'pop-column';
-is @grid.append(:@row),    < a b c d e f g h i j k l m n o p 0 1 2 3 >, 'append-row';
-is @grid.pop(:rows),       < a b c d e f g h i j k l m n o p >,         'pop-row';
+is @grid.append(:@column), < a b c d 0 e f g h 1 i j k l 2 m n o p 3 q r s t 4 u v w x 5 >, 'append-column';
+is @grid.pop(:columns),    < a b c d e f g h i j k l m n o p q r s t u v w x >,         'pop-column';
+is @grid.append(:@row),    < a b c d e f g h i j k l m n o p q r s t u v w x 0 1 2 3 >, 'append-row';
+is @grid.pop(:rows),       < a b c d e f g h i j k l m n o p q r s t u v w x >,         'pop-row';
 
 
 done-testing;
