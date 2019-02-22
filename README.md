@@ -202,6 +202,7 @@ Examples
     m n o p    ----------------->    m n o p
     q r s t                          q r s t
     u v w x                          u v w x
+    
     # fails becuase Grid.is-square === `False`
 
 
@@ -307,6 +308,7 @@ Examples
     m n o p    ---------------->     m n o p
     q r s t  [ 5, 6, 9, 10, 13, 14 ] q r s t
     u v w x                          u v w x
+    
     # fails becuase Subgrid.is-square === False
 
 
@@ -324,7 +326,7 @@ Examples
     m n o p    ----------------->    m n o p
     q r s t    [ 0, 1, 2, 3 ]        q r s t
     u v w x                          u v w x
-                                   <b>0 1 2 3</b>
+                                     <b>0 1 2 3</b>
 
     a b c d                          a b c d <b>0</b>
     e f g h                          e f g h <b>1</b>
@@ -350,12 +352,12 @@ Examples
     u v w x                          q r s t
                                      u v w x
 
-    a b c d                          <b>0</b>a b c d
-    e f g h                          <b>1</b>e f g h
-    i j k l       :@column           <b>2</b>i j k l
-    m n o p    ----------------->    <b>3</b>m n o p
-    q r s t   [ 0, 1, 2, 3, 4, 5 ]   <b>4</b>q r s t
-    u v w x                          <b>5</b>u v w x
+    a b c d                          <b>0</b> a b c d
+    e f g h                          <b>1</b> e f g h
+    i j k l       :@column           <b>2</b> i j k l
+    m n o p    ----------------->    <b>3</b> m n o p
+    q r s t   [ 0, 1, 2, 3, 4, 5 ]   <b>4</b> q r s t
+    u v w x                          <b>5</b> u v w x
 
 </code>
 </pre>
