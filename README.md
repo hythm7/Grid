@@ -33,7 +33,7 @@ It is also possible to apply methods to a subgrid of `Grid`, provided a valid su
 LIMITATIONS
 ===========
 
-Direct modification of `Grid` with methods like `push`, `unshift`, `append` or `prepend` may lead to unexpected behavior, Please use `Role`'s methods (e.g. `append-row`, `append-column`).
+Direct modification of `Grid` with methods like `push`, `unshift`, `append` or `prepend` may lead to unexpected behavior, Please use `Grid`'s methods (e.g. `append-row`, `append-column`, ...).
 
 
 Methods
@@ -43,7 +43,7 @@ Methods
 
     method grid () { ... }
 
-Prints a `:$!columns` `Grid` of the Array elements.
+Prints a `:$!columns` `Grid`.
 
 
 ### flip
@@ -419,7 +419,7 @@ Haytham Elganiny <elganiny.haytham@gmail.com>
 COPYRIGHT AND LICENSE
 =====================
 
-Copyright 2019 Haythem Elganiny
+Copyright 2019 Haytham Elganiny
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
