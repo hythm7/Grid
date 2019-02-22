@@ -402,7 +402,7 @@ Examples
 
     a b c d                          d
     e f g h                          h
-    i j k l        :1columns         l
+    i j k l        :3columns         l
     m n o p    ----------------->    p
     q r s t                          t
     u v w x                          x
