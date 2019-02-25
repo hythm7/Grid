@@ -18,6 +18,14 @@ submethod BUILD( ) is hidden-from-backtrace {
 
 }
 
+method columns {
+  $!columns;
+}
+
+method rows {
+  $!rows;
+}
+
 
 multi method flip ( Grid:D: Int:D :$horizontal! --> Grid:D ) {
 
