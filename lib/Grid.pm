@@ -186,12 +186,13 @@ multi method transpose ( Grid:D: :@indices! --> Grid:D ) {
 
 }
 
+proto method append ( Grid:D: | --> Grid:D ) { * }
 
 multi method append ( Grid:D: :@row! --> Grid:D ) {
 
   return self unless self!check-row( :@row );
 
-  self = self.append(@row);
+  self = flat self, @row;
 
   $!rows += 1;
 
@@ -212,11 +213,40 @@ multi method append ( Grid:D: :@column! --> Grid:D ) {
 }
 
 
+proto method push ( Grid:D: | --> Grid:D ) { * }
+
+multi method push ( Grid:D: :@row! --> Grid:D ) {
+
+  return self unless self!check-row( :@row );
+
+  self = flat self, @row;
+
+  $!rows += 1;
+
+  self;
+  
+}
+
+multi method push ( Grid:D: :@column! --> Grid:D ) {
+
+  return self unless self!check-column( :@column );
+  
+  self = flat self.rotor($!columns) Z @column;
+
+  $!columns += 1;
+
+  self;
+
+}
+
+
+proto method prepend ( Grid:D: | --> Grid:D ) { * }
+
 multi method prepend ( Grid:D: :@row! --> Grid:D ) {
 
   return self unless self!check-row( :@row );
 
-  self = self.prepend(@row);
+  self = flat @row, self;
   
   $!rows += 1;
 
@@ -236,13 +266,34 @@ multi method prepend ( Grid:D: :@column! --> Grid:D ) {
 
 }
 
-multi method pop ( Grid:D: --> Grid:D ) {
+proto method unshift ( Grid:D: | --> Grid:D ) { * }
 
-  note 'Please provide `:$rows` or `:$columns`';
+multi method unshift ( Grid:D: :@row! --> Grid:D ) {
+
+  return self unless self!check-row( :@row );
+
+  self = flat @row, self;
+  
+  $!rows += 1;
 
   self;
 
 }
+
+multi method unshift ( Grid:D: :@column! --> Grid:D ) {
+
+  return self unless self!check-column( :@column );
+  
+  self = flat @column Z self.rotor($!columns);
+
+  $!columns += 1;
+
+  self;
+
+}
+
+
+proto method pop ( Grid:D: | --> Grid:D ) { * }
 
 multi method pop ( Grid:D:  Int :$rows! --> Grid:D ) {
 
@@ -264,13 +315,8 @@ multi method pop ( Grid:D:  Int :$columns! --> Grid:D ) {
   
 }
 
-multi method shift ( Grid:D: --> Grid:D ) {
 
-  note 'Please provide `:$rows` or `:$columns`';
-
-  self;
-
-}
+proto method shift ( Grid:D: | --> Grid:D ) { * }
 
 multi method shift ( Grid:D:  Int :$rows! --> Grid:D ) {
 
@@ -292,6 +338,7 @@ multi method shift ( Grid:D:  Int :$columns! --> Grid:D ) {
 
 }
 
+proto method splice ( Grid:D: | --> Grid:D ) { * }
 
 method grid () {
 
