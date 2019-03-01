@@ -1,4 +1,4 @@
-unit role Grid[:$columns];
+unit role Grid[ Int :$columns ];
   
 has Int $!columns;
 has Int $!rows;
