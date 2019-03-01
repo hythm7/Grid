@@ -6,11 +6,11 @@ has Int $!rows;
 submethod BUILD is hidden-from-backtrace {
 
   $!columns = $columns // self.elems;
-  
+
   die "Can't have grid of {$!columns} columns" unless $!columns;
-  
+
   $!rows    = self.elems div $!columns;
-  
+
   die "Can't have grid of {self.elems} elements with {$!columns} columns"
     unless self.elems == $!columns * $!rows;
 
@@ -25,7 +25,7 @@ method rows {
 }
 
 method reshape ( Grid:D:  Int :$columns! where * > 0 --> Grid:D ) {
-   
+
   my $rows = self.elems div $columns;
 
   return self unless self.elems == $columns * $rows;
@@ -71,15 +71,14 @@ multi method flip ( Grid:D: :@horizontal! --> Grid:D ) {
 
   return self unless @subgrid;
 
-  
   self[ @horizontal ] = self[ @subgrid.flip: :horizontal ];
 
   return self;
- 
+
 }
 
 multi method flip ( Grid:D: :@vertical! --> Grid:D ) {
-  
+
   my @subgrid := self!subgrid( @vertical );
 
   return self unless @subgrid;
@@ -91,7 +90,7 @@ multi method flip ( Grid:D: :@vertical! --> Grid:D ) {
 }
 
 multi method flip ( Grid:D: :@diagonal! --> Grid:D ) {
-  
+
   my @subgrid := self!subgrid( @diagonal, :square );
 
   return self unless @subgrid;
@@ -103,7 +102,7 @@ multi method flip ( Grid:D: :@diagonal! --> Grid:D ) {
 }
 
 multi method flip ( Grid:D: :@antidiagonal! --> Grid:D ) {
-  
+
   my @subgrid := self!subgrid( @antidiagonal, :square );
 
   return self unless @subgrid;
@@ -118,29 +117,29 @@ multi method flip ( Grid:D: :@antidiagonal! --> Grid:D ) {
 multi method rotate ( Grid:D:  Int:D :$left! --> Grid:D ) {
 
   self = flat [Z] ([Z] self.rotor($!columns)).list.rotate($left);
-  
+
 }
 
 multi method rotate ( Grid:D:  Int:D :$right! --> Grid:D ) {
 
   self = flat [Z] ([Z] self.rotor($!columns)).list.rotate(- $right);
-  
+
 }
 
 multi method rotate ( Grid:D:  Int:D :$up! --> Grid:D ) {
 
   self = flat self.rotor($!columns).list.rotate($up);
-  
+
 }
 
 multi method rotate ( Grid:D:  Int:D :$down! --> Grid:D ) {
 
   self = flat self.rotor($!columns).list.rotate(- $down);
-  
+
 }
 
 multi method rotate ( Grid:D: Int:D :$clockwise! --> Grid:D ) {
-  
+
   self.transpose.flip :horizontal;
 
 }
@@ -209,13 +208,13 @@ multi method append ( Grid:D: :@rows! --> Grid:D ) {
   $!rows += 1;
 
   self;
-  
+
 }
 
 multi method append ( Grid:D: :@columns! --> Grid:D ) {
 
   return self unless self.check( :@columns );
-  
+
   self = flat self.rotor($!columns) Z @columns;
 
   $!columns += 1;
@@ -236,13 +235,13 @@ multi method push ( Grid:D: :@rows! --> Grid:D ) {
   $!rows += 1;
 
   self;
-  
+
 }
 
 multi method push ( Grid:D: :@columns! --> Grid:D ) {
 
   return self unless self.check( :@columns );
-  
+
   self = flat self.rotor($!columns) Z @columns;
 
   $!columns += 1;
@@ -259,7 +258,7 @@ multi method prepend ( Grid:D: :@rows! --> Grid:D ) {
   return self unless self.check( :@rows );
 
   self = flat @rows, self;
-  
+
   $!rows += 1;
 
   self;
@@ -269,7 +268,7 @@ multi method prepend ( Grid:D: :@rows! --> Grid:D ) {
 multi method prepend ( Grid:D: :@columns! --> Grid:D ) {
 
   return self unless self.check( :@columns );
-  
+
   self = flat @columns Z self.rotor($!columns);
 
   $!columns += 1;
@@ -285,7 +284,7 @@ multi method unshift ( Grid:D: :@rows! --> Grid:D ) {
   return self unless self.check( :@rows );
 
   self = flat @rows, self;
-  
+
   $!rows += 1;
 
   self;
@@ -295,7 +294,7 @@ multi method unshift ( Grid:D: :@rows! --> Grid:D ) {
 multi method unshift ( Grid:D: :@columns! --> Grid:D ) {
 
   return self unless self.check( :@columns );
-  
+
   self = flat @columns Z self.rotor($!columns);
 
   $!columns += 1;
@@ -324,7 +323,7 @@ multi method pop ( Grid:D:  Int :$columns! --> Grid:D ) {
   $!columns -= $columns;
 
   self;
-  
+
 }
 
 
@@ -333,7 +332,7 @@ proto method shift ( Grid:D: | --> Grid:D ) { * }
 multi method shift ( Grid:D:  Int :$rows! --> Grid:D ) {
 
   self = flat self.rotor($!columns).tail($!rows - $rows);
-  
+
   $!rows -= $rows;
 
   self;
@@ -343,7 +342,7 @@ multi method shift ( Grid:D:  Int :$rows! --> Grid:D ) {
 multi method shift ( Grid:D:  Int :$columns! --> Grid:D ) {
 
   self = flat [Z] ([Z] self.rotor($!columns)).tail($!columns - $columns);
-  
+
   $!columns -= $columns;
 
   self;
@@ -365,7 +364,7 @@ method grid () {
 method has-subgrid( :@indices!, :$square = False --> Bool:D ) {
 
   my @subgrid := self!subgrid( @indices, :$square );
-  
+
   return True if @subgrid ~~ Grid;
 
   False;
@@ -401,10 +400,10 @@ multi method check ( :@rows! --> Bool:D ) {
 submethod !subgrid( @indices, :$square = False ) {
 
   @indices .= sort.unique;
-    
+
   die "[{@indices}] is not subgrid of {self.VAR.name}"
     if @indices.tail > self.end;
-  
+
   #my $columns = (@subgrid Xmod $!columns).unique.elems;
   my $columns =  @indices.rotor(2 => -1, :partial).first( -> @a {
     (@a.head.succ != @a.tail) or (not @a.tail mod $!columns)
@@ -472,7 +471,7 @@ sub antidiagonal ( @perfect --> Array) {
 
 
   my @antidiagonaled = @perfect[ @perfect.keys.map: *.&antidiagonal-index ];
-  
+
   @antidiagonaled;
 
 }

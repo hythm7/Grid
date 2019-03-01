@@ -312,6 +312,20 @@ Returns `Grid`'s  columns count.
 Returns `Grid`'s  rows count.
 
 
+### check
+
+    multi method check ( :@rows! --> Bool:D ) { ... }
+Check if Rows can fit in `Grid`.
+
+    multi method check ( :@columns! --> Bool:D ) { ... }
+Check if Columns can fit in `Grid`.
+
+
+### reshape
+
+    method reshape ( Grid:D:  Int :$columns! where * > 0 --> Grid:D ) { ... }
+
+
 ### flip
 
     multi method flip ( Grid:D: Int:D :$horizontal! --> Grid:D ) { ... }
@@ -377,20 +391,29 @@ Transpose (Subgrid)
 
 ### append
 
-    multi method append ( Grid:D: :@row! --> Grid:D ) { ... }
-Append Row.
+    multi method append ( Grid:D: :@rows! --> Grid:D ) { ... }
+Append Rows.
 
-    multi method append ( Grid:D: :@column! --> Grid:D ) { ... }
-Append Column.
+    multi method append ( Grid:D: :@columns! --> Grid:D ) { ... }
+Append Columns.
 
 
 ### Prepend
 
-    multi method prepend ( Grid:D: :@row! --> Grid:D ) {
-Prepend Row.
+    multi method prepend ( Grid:D: :@rows! --> Grid:D ) {
+Prepend Rows.
 
-    multi method prepend ( Grid:D: :@column! --> Grid:D ) { ... }
-Prepend Column.
+    multi method prepend ( Grid:D: :@columns! --> Grid:D ) { ... }
+Prepend Columns.
+
+
+### push
+
+    multi method push ( Grid:D: :@rows! --> Grid:D ) { ... }
+Push Rows.
+
+    multi method push ( Grid:D: :@columns! --> Grid:D ) {
+Push Columns.
 
 
 ### pop
@@ -409,6 +432,15 @@ Shift Rows.
 
     multi method shift ( Grid:D:  Int :$columns! --> Grid:D ) { ... }
 Shift Columns.
+
+
+### unshift
+
+    multi method unshift ( Grid:D: :@rows! --> Grid:D ) { ... }
+Unshift Rows.
+
+    multi method unshift ( Grid:D: :@columns! --> Grid:D ) {
+Unshift Columns.
 
 
 ### has-subgrid
