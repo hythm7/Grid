@@ -24,7 +24,7 @@ method rows {
   $!rows;
 }
 
-multi method reshape ( Grid:D:  Int :$columns! where * > 0 --> Grid:D ) {
+method reshape ( Grid:D:  Int :$columns! where * > 0 --> Grid:D ) {
    
   my $rows = self.elems div $columns;
 
@@ -200,11 +200,11 @@ multi method transpose ( Grid:D: :@indices! --> Grid:D ) {
 
 proto method append ( Grid:D: | --> Grid:D ) { * }
 
-multi method append ( Grid:D: :@row! --> Grid:D ) {
+multi method append ( Grid:D: :@rows! --> Grid:D ) {
 
-  return self unless self!check-row( :@row );
+  return self unless self.check( :@rows );
 
-  self = flat self, @row;
+  self = flat self, @rows;
 
   $!rows += 1;
 
@@ -212,11 +212,11 @@ multi method append ( Grid:D: :@row! --> Grid:D ) {
   
 }
 
-multi method append ( Grid:D: :@column! --> Grid:D ) {
+multi method append ( Grid:D: :@columns! --> Grid:D ) {
 
-  return self unless self!check-column( :@column );
+  return self unless self.check( :@columns );
   
-  self = flat self.rotor($!columns) Z @column;
+  self = flat self.rotor($!columns) Z @columns;
 
   $!columns += 1;
 
@@ -227,11 +227,11 @@ multi method append ( Grid:D: :@column! --> Grid:D ) {
 
 proto method push ( Grid:D: | --> Grid:D ) { * }
 
-multi method push ( Grid:D: :@row! --> Grid:D ) {
+multi method push ( Grid:D: :@rows! --> Grid:D ) {
 
-  return self unless self!check-row( :@row );
+  return self unless self.check( :@rows );
 
-  self = flat self, @row;
+  self = flat self, @rows;
 
   $!rows += 1;
 
@@ -239,11 +239,11 @@ multi method push ( Grid:D: :@row! --> Grid:D ) {
   
 }
 
-multi method push ( Grid:D: :@column! --> Grid:D ) {
+multi method push ( Grid:D: :@columns! --> Grid:D ) {
 
-  return self unless self!check-column( :@column );
+  return self unless self.check( :@columns );
   
-  self = flat self.rotor($!columns) Z @column;
+  self = flat self.rotor($!columns) Z @columns;
 
   $!columns += 1;
 
@@ -254,11 +254,11 @@ multi method push ( Grid:D: :@column! --> Grid:D ) {
 
 proto method prepend ( Grid:D: | --> Grid:D ) { * }
 
-multi method prepend ( Grid:D: :@row! --> Grid:D ) {
+multi method prepend ( Grid:D: :@rows! --> Grid:D ) {
 
-  return self unless self!check-row( :@row );
+  return self unless self.check( :@rows );
 
-  self = flat @row, self;
+  self = flat @rows, self;
   
   $!rows += 1;
 
@@ -266,11 +266,11 @@ multi method prepend ( Grid:D: :@row! --> Grid:D ) {
 
 }
 
-multi method prepend ( Grid:D: :@column! --> Grid:D ) {
+multi method prepend ( Grid:D: :@columns! --> Grid:D ) {
 
-  return self unless self!check-column( :@column );
+  return self unless self.check( :@columns );
   
-  self = flat @column Z self.rotor($!columns);
+  self = flat @columns Z self.rotor($!columns);
 
   $!columns += 1;
 
@@ -280,11 +280,11 @@ multi method prepend ( Grid:D: :@column! --> Grid:D ) {
 
 proto method unshift ( Grid:D: | --> Grid:D ) { * }
 
-multi method unshift ( Grid:D: :@row! --> Grid:D ) {
+multi method unshift ( Grid:D: :@rows! --> Grid:D ) {
 
-  return self unless self!check-row( :@row );
+  return self unless self.check( :@rows );
 
-  self = flat @row, self;
+  self = flat @rows, self;
   
   $!rows += 1;
 
@@ -292,11 +292,11 @@ multi method unshift ( Grid:D: :@row! --> Grid:D ) {
 
 }
 
-multi method unshift ( Grid:D: :@column! --> Grid:D ) {
+multi method unshift ( Grid:D: :@columns! --> Grid:D ) {
 
-  return self unless self!check-column( :@column );
+  return self unless self.check( :@columns );
   
-  self = flat @column Z self.rotor($!columns);
+  self = flat @columns Z self.rotor($!columns);
 
   $!columns += 1;
 
@@ -378,21 +378,21 @@ method is-square ( --> Bool:D ) {
 
 }
 
-submethod !check-column ( :@column --> Bool:D ) {
+multi method check ( :@columns! --> Bool:D ) {
 
-  return True if @column.elems == $!rows;
+  return True unless @columns.elems mod $!rows;
 
-  note "Column check failed, must have {$!rows} elements.";
+  note "Columns check failed, count must be multiple of  {$!rows}.";
 
   False;
 
 }
 
-submethod !check-row ( :@row --> Bool:D ) {
+multi method check ( :@rows! --> Bool:D ) {
 
-  return True if @row.elems == $!columns;
+  return True unless @rows.elems mod $!columns;
 
-  note "Row check failed, must have {$!columns} elements.";
+  note "Rows check failed, count must be multiple of  {$!columns}.";
 
   False;
 
