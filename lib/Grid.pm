@@ -353,31 +353,11 @@ multi method shift ( Grid:D:  Int :$columns! --> Grid:D ) {
 
 proto method splice ( Grid:D: :$rows, :$columns --> Grid:D ) { * }
 
-multi method splice ( Grid:D: Int :$start = 0, Int :$remove,  Bool :$columns! --> Grid:D ) {
-  say 'starting ', $start;
-  say 'removing ', $remove;
-  say $columns;
-
-  self;
-
-}
-
-multi method splice ( Grid:D: Int :$start = 0, Int :$remove,  :@columns! --> Grid:D ) {
-  say 'starting ', $start;
-  say 'removing ', $remove;
-  say @columns;
-
-  self;
-
-}
-
-
 
 method grid () {
 
   # TODO: indentation
   .put for self.rotor($!columns);
-  
 
 }
 
@@ -393,8 +373,6 @@ method has-subgrid( :@indices!, :$square = False --> Bool:D ) {
 }
 
 method is-square ( --> Bool:D ) {
-
-  #return False if $!columns < 2;
 
   $!columns == $!rows;
 
