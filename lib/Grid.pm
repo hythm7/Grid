@@ -381,8 +381,6 @@ multi method check ( :@columns! --> Bool:D ) {
 
   return True unless @columns.elems mod $!rows;
 
-  note "Columns check failed, count must be multiple of  {$!rows}.";
-
   False;
 
 }
@@ -390,8 +388,6 @@ multi method check ( :@columns! --> Bool:D ) {
 multi method check ( :@rows! --> Bool:D ) {
 
   return True unless @rows.elems mod $!columns;
-
-  note "Rows check failed, count must be multiple of  {$!columns}.";
 
   False;
 
@@ -425,8 +421,6 @@ submethod !subgrid( @indices, :$square = False ) {
   return @subgrid;
 
   CATCH {
-
-    note .message;
 
     return Array;
 
