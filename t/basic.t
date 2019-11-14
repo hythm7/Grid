@@ -19,29 +19,29 @@ can-ok @grid, 'transpose';
 # Subgrid test
 my @subgrid-test = (
 # [Subgrid Result]
-[ [3, 4],                 False ], # @subgrid not valid
-[ [1, 7],                 False ], # @subgrid not valid
-[ [0 ... 4],              False ], # @subgrid not valid
-[ [0 ... 4, 7],           False ], # @subgrid not valid
-[ [0, 4, 8, 12, 16],      True  ], # @subgrid not valid
-[ [0, 4, 8, 12, 16, 20],  True ],
-[ [1, 5, 9, 13, 17, 21],  True ],
-[ [3, 7, 11, 15, 19, 23], True ],
-[ [0, 4],                 True ],
-[ [0 ... 0],              True ],
-[ [0 ... 1],              True ],
-[ [0 ... 2],              True ],
-[ [0 ... 3],              True ],
-[ [0 ... 7],              True ],
-[ [0 ... 23],             True ],
-[ [9, 10, 13, 14],        True ],
+[ [3, 4],                 0 ], # @subgrid not valid
+[ [1, 7],                 0 ], # @subgrid not valid
+[ [0 ... 4],              0 ], # @subgrid not valid
+[ [0 ... 4, 7],           0 ], # @subgrid not valid
+[ [0, 4, 8, 12, 16],      1 ], # @subgrid not valid
+[ [0, 4, 8, 12, 16, 20],  1 ],
+[ [1, 5, 9, 13, 17, 21],  1 ],
+[ [3, 7, 11, 15, 19, 23], 1 ],
+[ [0, 4],                 1 ],
+[ [0 ... 0],              1 ],
+[ [0 ... 1],              2 ],
+[ [0 ... 2],              3 ],
+[ [0 ... 3],              4 ],
+[ [0 ... 7],              4 ],
+[ [0 ... 23],             4 ],
+[ [9, 10, 13, 14],        2 ],
 );
 
 
 
 for @subgrid-test -> [ @indices, $result ] {
-  my $is-subgrid = @grid.has-subgrid(:@indices);
-  ok $result === $is-subgrid, "subgrid" ~ " [{@indices}]";
+  my $columns = @grid.has-subgrid(:@indices);
+  ok $result ~~ $columns.Int, "[{@indices}] $columns";
 }
 
 
