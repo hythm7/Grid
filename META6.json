@@ -3,7 +3,7 @@
     "name" : "Grid",
     "auth" : "github:hythm7",
     "api" : "*",
-    "version" : "0.0.3",
+    "version" : "0.0.4",
     "description" : "Grid Role for Arrays.",
     "authors" : [ "Haytham Elganiny" ],
     "license" : "Artistic-2.0",

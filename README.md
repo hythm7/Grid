@@ -22,7 +22,7 @@ To flip a `Grid` horizontaly or vertically:
 
     @grid.flip: :horizontal
     @grid.flip: :vertical
-    
+
 It is also possible to apply methods to a subgrid of `Grid`, provided a valid subgrid indices:
 
     my @indices  = 9, 10, 13, 14; @grid.flip: :vertical(@indices); # or
@@ -57,7 +57,7 @@ EXAMPLES
 <pre>
 <code>
 
-    a b c d                          <b>d c b a</b> 
+    a b c d                          <b>d c b a</b>
     e f g h                          <b>h g f e</b>
     i j k l       :horizontal        <b>l k j i</b>
     m n o p    ----------------->    <b>p o n m</b>
@@ -95,7 +95,7 @@ EXAMPLES
     m n o p    ----------------->    m n o p
     q r s t                          q r s t
     u v w x                          u v w x
-    
+
     # fails becuase Grid.is-square === False
 
 
@@ -124,7 +124,7 @@ EXAMPLES
     u v w x                          u v w x
 
 
-    a b c d                          <b>d a b c</b> 
+    a b c d                          <b>d a b c</b>
     e f g h                          <b>h e f g</b>
     i j k l         :right           <b>l i j k</b>
     m n o p    ----------------->    <b>p m n o</b>
@@ -132,7 +132,7 @@ EXAMPLES
     u v w x                          <b>x u v w</b>
 
 
-    a b c d                          <b>c d a b</b> 
+    a b c d                          <b>c d a b</b>
     e f g h                          <b>g h e f</b>
     i j k l         :2left           <b>k l i j</b>
     m n o p    ----------------->    <b>o p m n</b>
@@ -140,7 +140,7 @@ EXAMPLES
     u v w x                          <b>w x u v</b>
 
 
-    a b c d                          <b>m n o p</b> 
+    a b c d                          <b>m n o p</b>
     e f g h                          <b>q r s t</b>
     i j k l         :3down           <b>u v w x</b>
     m n o p    ----------------->    <b>a b c d</b>
@@ -148,7 +148,7 @@ EXAMPLES
     u v w x                          <b>i j k l</b>
 
 
-    a b c d                          <b>e f g h</b> 
+    a b c d                          <b>e f g h</b>
     e f g h                          <b>i j k l</b>
     i j k l          :7up            <b>m n o p</b>
     m n o p    ----------------->    <b>q r s t</b>
@@ -186,7 +186,7 @@ EXAMPLES
     m n o p    ---------------->     m n o p
     q r s t  [ 5, 6, 9, 10, 13, 14 ] q r s t
     u v w x                          u v w x
-    
+
     # fails becuase Subgrid.is-square === False
 
 
@@ -212,7 +212,7 @@ EXAMPLES
     m n o p    ----------------->    m n o p <b>3</b>
     q r s t   [ 0, 1, 2, 3, 4, 5 ]   q r s t <b>4</b>
     u v w x                          u v w x <b>5</b>
-  
+
 
 </code>
 </pre>
@@ -273,7 +273,7 @@ EXAMPLES
     a b c d
     e f g h                          i j k l
     i j k l         :2rows           m n o p
-    m n o p    ----------------->    q r s t 
+    m n o p    ----------------->    q r s t
     q r s t                          u v w x
     u v w x
 
@@ -446,8 +446,8 @@ Unshift Columns.
 
 ### has-subgrid
 
-    method has-subgrid( :@indices!, :$square = False --> Bool:D ) { ... }
-Returns `True` if `:@indices` is a subgrid of `Grid`, `False` otherwise.
+    method has-subgrid( :@indices!, :$square = False --> Int:D ) { ... }
+    Returns `columns` if `:@indices` is a subgrid of `Grid`, `False` otherwise.
 
 
 ### is-square

@@ -1,5 +1,5 @@
 unit role Grid[ Int :$columns ];
-  
+
 has Int $!columns;
 has Int $!rows;
 
@@ -66,7 +66,7 @@ multi method flip ( Grid:D: Int:D :$antidiagonal! --> Grid:D ) {
 }
 
 multi method flip ( Grid:D: :@horizontal! --> Grid:D ) {
-  
+
   my @subgrid := self!subgrid( @horizontal );
 
   return self unless @subgrid;
@@ -179,14 +179,14 @@ multi method transpose ( Grid:D: --> Grid:D ) {
 
    self = flat [Z] self.rotor( $!columns );
 
-   ($!columns, $!rows) .= reverse; 
+   ($!columns, $!rows) .= reverse;
 
    self;
 
 }
 
 multi method transpose ( Grid:D: :@indices! --> Grid:D ) {
-  
+
   my @subgrid := self!subgrid( @indices, :square );
 
   return self unless @subgrid;
@@ -361,11 +361,11 @@ method grid () {
 }
 
 
-method has-subgrid( :@indices!, :$square = False --> Bool:D ) {
+method has-subgrid( :@indices!, :$square = False --> Int:D ) {
 
   my @subgrid := self!subgrid( @indices, :$square );
 
-  return True if @subgrid ~~ Grid;
+  return @subgrid.columns if @subgrid ~~ Grid;
 
   False;
 
@@ -431,7 +431,7 @@ sub diagonal ( @perfect --> Array ) {
 
   my $root = @perfect.sqrt.Int;
 
-  sub diagonaled-index ( Int $index ) { 
+  sub diagonaled-index ( Int $index ) {
     return $index when $index == @perfect.end;
     return $index * $root mod @perfect.end;
   }
@@ -441,7 +441,6 @@ sub diagonal ( @perfect --> Array ) {
   @diagonaled;
 
 }
-
 
 
 sub antidiagonal ( @perfect --> Array) {
