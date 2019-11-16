@@ -39,14 +39,14 @@ my @subgrid-test = (
 
 
 
-for @subgrid-test -> [ @indices, $result ] {
-  my $columns = @grid.has-subgrid(:@indices);
-  ok $result ~~ $columns.Int, "[{@indices}] $columns";
+for @subgrid-test -> [ @index, $result ] {
+  my $columns = @grid.has-subgrid(:@index);
+  ok $result ~~ $columns.Int, "[{@index}] $columns";
 }
 
 
 # Grid test
-my @indices = 5, 6, 9, 10;
+my @index = 5, 6, 9, 10;
 my @grid-test = (
 # [Method Pair.key Pair.value Result]
 [ <flip>,   <vertical>,      [0, 4],          < e b c d a f g h i j k l m n o p q r s t u v w x > ],

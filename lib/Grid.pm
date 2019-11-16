@@ -185,13 +185,13 @@ multi method transpose ( Grid:D: --> Grid:D ) {
 
 }
 
-multi method transpose ( Grid:D: :@indices! --> Grid:D ) {
+multi method transpose ( Grid:D: :@index! --> Grid:D ) {
 
-  my @subgrid := self!subgrid( @indices, :square );
+  my @subgrid := self!subgrid( @index, :square );
 
   return self unless @subgrid;
 
-  self[ @indices ] = self[ @subgrid.transpose ];
+  self[ @index ] = self[ @subgrid.transpose ];
 
   self;
 
@@ -361,9 +361,9 @@ method grid () {
 }
 
 
-method has-subgrid( :@indices!, :$square = False --> Int:D ) {
+method has-subgrid( :@index!, :$square = False --> Int:D ) {
 
-  my @subgrid := self!subgrid( @indices, :$square );
+  my @subgrid := self!subgrid( @index, :$square );
 
   return @subgrid.columns if @subgrid ~~ Grid;
 
@@ -393,30 +393,30 @@ multi method check ( :@rows! --> Bool:D ) {
 
 }
 
-submethod !subgrid( @indices, :$square = False ) {
+submethod !subgrid( @index, :$square = False ) {
 
-  @indices .= sort.unique;
+  @index .= sort.unique;
 
-  die "[{@indices}] is not subgrid of {self.VAR.name}"
-    if @indices.tail > self.end;
+  die "[{@index}] is not subgrid of {self.VAR.name}"
+    if @index.tail > self.end;
 
   #my $columns = (@subgrid Xmod $!columns).unique.elems;
-  my $columns =  @indices.rotor(2 => -1, :partial).first( -> @a {
+  my $columns =  @index.rotor(2 => -1, :partial).first( -> @a {
     (@a.head.succ != @a.tail) or (not @a.tail mod $!columns)
   }):k + 1;
 
   # fail  unless [eqv] (@subgrid Xmod $!columns).rotor(@subgrid.columns, :partial);
-  die "[{@indices}] is not subgrid of {self.VAR.name}"
-    unless @indices.rotor($columns).rotor(2 => -1).map( -> @a {
+  die "[{@index}] is not subgrid of {self.VAR.name}"
+    unless @index.rotor($columns).rotor(2 => -1).map( -> @a {
       (@a.head X+ $!columns) eq @a.tail;
     }).all.so ;
 
 
-  my @subgrid = @indices;
+  my @subgrid = @index;
 
   @subgrid does Grid[:$columns];
 
-  $square and die "[{@indices}] is not square subgrid of {self.VAR.name}" unless @subgrid.is-square;
+  $square and die "[{@index}] is not square subgrid of {self.VAR.name}" unless @subgrid.is-square;
 
   return @subgrid;
 
