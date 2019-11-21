@@ -353,10 +353,11 @@ multi method shift ( Grid:D:  Int :$columns! --> Grid:D ) {
 proto method splice ( Grid:D: :$rows, :$columns --> Grid:D ) { * }
 
 
-method grid () {
+method grid ( Grid:D: Bool:D :$formatted = False ) {
 
-  # TODO: indentation
-  .put for self.rotor($!columns);
+  $formatted
+    ?? self.rotor($!columns).map( *.join ).join: "\n"
+    !! self.rotor($!columns).map( *.join );
 
 }
 

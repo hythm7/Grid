@@ -10,11 +10,18 @@ my @grid = < a b c d e f g h i j k l m n o p q r s t u v w x >;
 @grid does Grid[:4columns];
 
 
-plan 42;
+plan 44;
 
 use-ok 'Grid';
 does-ok @grid, Grid;
 can-ok @grid, 'transpose';
+
+
+my $list = < abcd efgh ijkl mnop qrst uvwx >;
+my $formatted = $list.join: "\n";
+
+ok $list      ~~ @grid.grid( ),            'grid';
+ok $formatted ~~ @grid.grid( :formatted ), 'formatted grid';
 
 # Subgrid test
 my @subgrid-test = (

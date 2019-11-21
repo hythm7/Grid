@@ -39,14 +39,19 @@ EXAMPLES
 <pre>
 <code>
 
-    @grid.grid;
+    say @grid.grid;
 
-    a b c d
-    e f g h
-    i j k l
-    m n o p
-    q r s t
-    u v w x
+    (abcd efgh ijkl mnop qrst uvwx)
+
+
+    say @grid.grid: :formatted;
+
+    abcd
+    efgh
+    ijkl
+    mnop
+    qrst
+    uvwx
 
 </code>
 </pre>
@@ -294,9 +299,9 @@ METHODS
 
 ### grid
 
-    method grid { ... }
+    method grid ( Bool:D :$formatted = False ) { ... }
 
-Prints a `:$!columns` `Grid`.
+Returns list of strings or a formatted string of `Grid`.
 
 
 ### columns
