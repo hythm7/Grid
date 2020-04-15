@@ -396,7 +396,7 @@ multi method check ( :@rows! --> Bool:D ) {
 
 submethod !subgrid( @index, :$square = False ) {
 
-  @index .= sort.unique;
+  @index .= sort .= unique;
 
   die "[{@index}] is not subgrid of {self.VAR.name}"
     if @index.tail > self.end;
