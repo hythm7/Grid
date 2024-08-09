@@ -1,9 +1,9 @@
 {
     "perl" : "6.*",
     "name" : "Grid",
-    "auth" : "github:hythm7",
-    "api" : "*",
-    "version" : "0.0.4",
+    "auth" : "zef:hythm",
+    "api" : "0",
+    "version" : "0.0.5",
     "description" : "Grid Role for Arrays.",
     "authors" : [ "Haytham Elganiny" ],
     "license" : "Artistic-2.0",
